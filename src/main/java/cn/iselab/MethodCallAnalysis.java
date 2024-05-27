@@ -18,11 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.text.MessageFormat;
+
 public class MethodCallAnalysis {
 
     public static void main(String[] args) {
+        String projectName = "Nextday";
         // 指定源码根目录
-        String sourceRootPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday\\src\\main\\java";
+        String sourceRootPath = MessageFormat.format("C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\{0}\\src\\main\\java", projectName);
 
         try {
             // 遍历目录下的所有 Java 文件

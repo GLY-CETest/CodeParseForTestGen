@@ -213,7 +213,7 @@ public class JavaFileParser {
 
 
     public static void main(String[] args) throws IOException {
-        String projectPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle";
+        String projectPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday";
 //        List<String> fileNames = searchFiles(new File(projectPath + '/' + "src/main/java"));
         parseJavaFiles(projectPath);
 

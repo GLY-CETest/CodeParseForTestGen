@@ -1,0 +1,6 @@
+{
+  "getType" : [ "isTriangle" ],
+  "diffOfBorders" : [ ],
+  "getBorders" : [ ],
+  "isTriangle" : [ "diffOfBorders", "diffOfBorders", "diffOfBorders" ]
+}

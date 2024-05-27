@@ -61,13 +61,13 @@ public class MethodCallExtractorDelDupli {
         File directory = new File(dirPath + '/' + "src/main/java");
         List<String> sourceFilesPath = new ArrayList<>();
         searchFiles(directory, sourceFilesPath);
-        
+
     }
 
     public static void main(String[] args) throws IOException {
         // 解析源代码文件路径
-        SourceRoot sourceRoot = new SourceRoot(Paths.get("C:\\YGL\\Projects\\pythonProject\\MutationGPTTestGeneration\\projUT\\Triangle\\src\\main\\java\\net\\mooctest"));
-        CompilationUnit cu = sourceRoot.parse("", "Triangle.java");
+        SourceRoot sourceRoot = new SourceRoot(Paths.get("C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\src\\main\\java"));
+        CompilationUnit cu = sourceRoot.parse("net\\mooctest", "");
 
         MethodCallVisitor methodCallVisitor = new MethodCallVisitor();
         methodCallVisitor.visit(cu, null);

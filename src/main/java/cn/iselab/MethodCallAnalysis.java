@@ -1,0 +1,111 @@
+package cn.iselab;
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class MethodCallAnalysis {
+
+    public static void main(String[] args) {
+        // 指定源码根目录
+        String sourceRootPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday\\src\\main\\java";
+
+        try {
+            // 遍历目录下的所有 Java 文件
+            Files.walk(Paths.get(sourceRootPath))
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".java"))
+                    .forEach(MethodCallAnalysis::analyzeAndSaveMethodCalls);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void analyzeAndSaveMethodCalls(Path javaFilePath) {
+        try {
+            // 解析 Java 文件
+            CompilationUnit cu = StaticJavaParser.parse(javaFilePath);
+
+            // 创建一个列表来存储方法调用关系
+            List<Map<String, Object>> methodCallsList = new ArrayList<>();
+
+            // 访问并分析方法调用
+            cu.accept(new MethodCallVisitor(methodCallsList), null);
+
+            // 将结果写入 JSON 文件
+            saveMethodCallsToJson(javaFilePath, methodCallsList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void saveMethodCallsToJson(Path javaFilePath, List<Map<String, Object>> methodCallsList) {
+        // 创建 Gson 实例
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        // 构建 JSON 文件名
+        String jsonFileName = javaFilePath.toString().replace(".java", ".json");
+        jsonFileName = jsonFileName.replace("src\\main\\java\\net\\mooctest", "target\\parsefiles\\method_call");
+        File parentDir = new File(jsonFileName).getParentFile();
+        if (!parentDir.exists()){
+            if (parentDir.mkdirs()) {
+                System.out.println("Directories created successfully.");
+            } else {
+                System.err.println("Failed to create directories.");
+                return;
+            }
+        }
+
+        try (FileWriter writer = new FileWriter(jsonFileName)) {
+            // 将方法调用关系写入 JSON 文件
+            gson.toJson(methodCallsList, writer);
+            System.out.println("Saved method calls to: " + jsonFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static class MethodCallVisitor extends VoidVisitorAdapter<Void> {
+        private final List<Map<String, Object>> methodCallsList;
+
+        public MethodCallVisitor(List<Map<String, Object>> methodCallsList) {
+            this.methodCallsList = methodCallsList;
+        }
+
+        @Override
+        public void visit(MethodDeclaration md, Void arg) {
+            super.visit(md, arg);
+
+            // 创建一个 Map 来存储方法信息
+            Map<String, Object> methodInfo = new HashMap<>();
+            methodInfo.put("methodName", md.getNameAsString());
+            methodInfo.put("methodCalls", new ArrayList<Map<String, Object>>());
+
+            // 查找方法调用
+            List<MethodCallExpr> methodCalls = md.findAll(MethodCallExpr.class);
+            for (MethodCallExpr mce : methodCalls) {
+                Map<String, Object> callInfo = new HashMap<>();
+                callInfo.put("calledMethodName", mce.getNameAsString());
+                callInfo.put("line", mce.getBegin().get().line);
+                ((List<Map<String, Object>>) methodInfo.get("methodCalls")).add(callInfo);
+            }
+
+            // 将方法信息添加到列表
+            methodCallsList.add(methodInfo);
+        }
+    }
+}

@@ -188,6 +188,9 @@ public class JavaFileParser {
                             methodJson.put("comment: ", "");
                         }
 
+                        methodJson.put("beginline", m.getBegin().get().line);
+                        methodJson.put("endline", m.getEnd().get().line);
+
                         List<String> parameterTypes = m.getParameters().stream()
                                 .map(p -> p.getType().asString())
                                 .collect(Collectors.toList());

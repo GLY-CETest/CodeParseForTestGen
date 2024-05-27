@@ -13,6 +13,9 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 抽取类中各个方法的调用关系，并删除其中重复的调用
+ */
 public class MethodCallExtractorDelDupli {
 
     private static class MethodCallVisitor extends VoidVisitorAdapter<Void> {

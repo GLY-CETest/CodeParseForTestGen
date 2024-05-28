@@ -1,4 +1,4 @@
-package cn.iselab;
+package cn.iselab.parse;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;

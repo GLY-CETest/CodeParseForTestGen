@@ -40,6 +40,23 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.7.0</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.78</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.beust/jcommander -->
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.82</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -53,16 +70,11 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.1.10</version>
-                <configuration>
-                    <targetClasses>
-                        <param>cn.iselab.parse*</param>
-                    </targetClasses>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.pitest</groupId>-->
+<!--                <artifactId>pitest-maven</artifactId>-->
+<!--                <version>1.2.0</version>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

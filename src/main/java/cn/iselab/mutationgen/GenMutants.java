@@ -67,7 +67,7 @@ public class GenMutants {
             System.exit(0);
         }
 
-        System.out.println(cmdArgs);
+        System.out.println("<cmdArgs>: " + cmdArgs + "<\ncmdArgs>");
 
         // Initialize globals except for jar loader (as it may raise exception).
         copyInner = cmdArgs.copyInnerClasses;
@@ -89,6 +89,7 @@ public class GenMutants {
 
             // Initiate mutater.
             Mutater mutater = instantiateMutater(source, cmdArgs.mutators);
+//            System.out.println("mutators: " + cmdArgs.mutators.toString());
 
             // Compute classes to be mutated.
             List<String> targetClassFQNs = computeTargetClassFQNs(
@@ -242,8 +243,10 @@ public class GenMutants {
 
             // Write mutant details.
             File detailsFile = new File(sepDir, "details.json");
+            System.out.println("mutantJson: " + mutantJson.toString());
             FileUtils.writeContentIntoFile(detailsFile, JSON.toJSONString(mutantJson, true));
 
+            //将变异体保存为.class
             // Write (1) mutant class, (2) specified common classes and
             // (3) other relevant classes to disk.
             writeClassesToDisk(mutantJson.getClassName(), sepDir, mutant);

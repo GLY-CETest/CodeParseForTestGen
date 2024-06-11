@@ -1,17 +1,11 @@
-package cn.iselab.parse;
+package cn.iselab.codeparse;
 
 import com.github.javaparser.*;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.github.javaparser.ast.stmt.Statement;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 public class CodeParse {
 

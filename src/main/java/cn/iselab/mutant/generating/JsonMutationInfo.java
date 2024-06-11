@@ -1,4 +1,4 @@
-package cn.iselab.mutationgen;
+package cn.iselab.mutant.generating;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import org.pitest.mutationtest.engine.MutationDetails;

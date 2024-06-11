@@ -1,15 +1,11 @@
-package cn.iselab.parse;
+package cn.iselab.codeparse;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.ast.comments.CommentsCollection;
-import com.github.javaparser.ast.comments.JavadocComment;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,12 +16,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.io.FileWriter;
-import java.io.BufferedWriter;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.nio.file.Paths;
-import java.nio.file.Path;
 
 public class JavaFileParser {
     /**
@@ -218,7 +211,7 @@ public class JavaFileParser {
 
 
     public static void main(String[] args) throws IOException {
-        String projectPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday";
+        String projectPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle";
 //        List<String> fileNames = searchFiles(new File(projectPath + '/' + "src/main/java"));
         parseJavaFiles(projectPath);
 

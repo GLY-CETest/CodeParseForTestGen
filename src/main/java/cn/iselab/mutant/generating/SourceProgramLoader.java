@@ -1,4 +1,4 @@
-package cn.iselab.mutationgen;
+package cn.iselab.mutant.generating;
 
 import java.io.File;
 import java.net.MalformedURLException;

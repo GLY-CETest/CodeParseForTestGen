@@ -1,12 +1,10 @@
-package cn.iselab.mutationgen;
+package cn.iselab.mutant.generating;
 
 import com.alibaba.fastjson.JSON;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.beust.jcommander.converters.FileConverter;
-import cn.iselab.mutationgen.SourceProgramLoader;
-import cn.iselab.mutationgen.FileUtils;
 import org.pitest.classinfo.ClassByteArraySource;
 import org.pitest.classinfo.ClassName;
 import org.pitest.classpath.ClassloaderByteArraySource;

@@ -1,6 +1,4 @@
-package cn.iselab.mutationgen;
-
-import cn.iselab.mutationgen.FileUtils;
+package cn.iselab.mutant.generating;
 
 import java.io.File;
 import java.io.IOException;

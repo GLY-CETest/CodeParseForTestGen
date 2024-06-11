@@ -1,4 +1,4 @@
-package cn.iselab.parse;
+package cn.iselab.codeparse;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;

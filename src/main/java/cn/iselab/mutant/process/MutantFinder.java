@@ -59,7 +59,6 @@ public class MutantFinder {
                     if (type.equals("method")) {
                         int start_line = elementNode.get("start_line").asInt();
                         int end_line = elementNode.get("end_line").asInt();
-                        // ... 根据需要读取更多字段
                         if (lineNumber >= start_line && lineNumber <= end_line)
                         {
                             System.out.println("name: " + name);

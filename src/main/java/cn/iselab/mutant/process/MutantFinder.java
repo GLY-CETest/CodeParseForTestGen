@@ -1,11 +1,14 @@
 package cn.iselab.mutant.process;
 
+import org.benf.cfr.reader.Main;
 import org.json.JSONObject;
 
 import java.util.Iterator;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -20,6 +23,7 @@ public class MutantFinder {
         int lineNumber = mutantLineNumberFinder(filePath);
         System.out.println("Mutant lineNumber: " + lineNumber);
         mutantMethodFinder(astPath, lineNumber);
+        deCompiler();
     }
 
     public static int mutantLineNumberFinder(String path) throws Exception {
@@ -77,5 +81,38 @@ public class MutantFinder {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public static void deCompiler(String classFilePath, String outputPath) throws Exception {
+//        String classFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.class"; // 替换为你的.class文件路径
+//        String outputPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java";  // 替换为你想要输出的.java文件路径
+
+        // 准备CFR反编译器的参数
+        String[] cfrArgs = {classFilePath};
+
+        // 捕获反编译输出
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream oldOut = System.out;
+        PrintStream printStream = new PrintStream(baos);
+        System.setOut(printStream);
+
+        // 执行反编译
+        Main.main(cfrArgs);
+
+        // 恢复标准输出流
+        System.out.flush();
+        System.setOut(oldOut);
+
+        // 获取反编译后的内容
+        String decompiledContent = baos.toString();
+
+        // 将反编译后的内容写入文件
+        try {
+            Files.write(Paths.get(outputPath), decompiledContent.getBytes());
+            System.out.println("Decompiled file written to: " + outputPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,0 +1,123 @@
+package cn.iselab.mutant.process;
+
+import org.benf.cfr.reader.Main;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+
+public class Decompiler {
+    public static void main(String[] args) throws Exception
+    {
+//        deCompiler("C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.class", "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java");
+        String projectPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday";
+        deCompileAllClasses(projectPath);
+
+
+    }
+
+    public static void deCompileAllClasses(String projectPath) throws Exception {
+        Path mutantsClassPath = Paths.get(projectPath, "target/mutants");
+        Path sourceClassesPath = Paths.get(projectPath, "target/classes");
+
+//        String directoryPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes"; // 替换为你的目录路径
+
+        List<String> sourceClassesFiles = findClassFiles(sourceClassesPath.toString());
+        List<String> mutantsClassesFiles = findClassFiles(mutantsClassPath.toString());
+//        System.out.println("Found .class files:");
+        System.out.println("-----Decompiling source classes-----");
+        for (String filePath : sourceClassesFiles) {
+            deCompiler(filePath, filePath.replace(".class", ".java"));
+        }
+        System.out.println("-----Decompiling mutant classes-----");
+        for (String filePath : mutantsClassesFiles) {
+            deCompiler(filePath, filePath.replace(".class", ".java"));
+        }
+    }
+
+
+    /**
+     * 反编译一个.class文件为.java
+     *
+     * @param classFilePath 需要反编译的.class文件路径
+     * @param outputPath 需要输出的.java文件路径
+     * @throws Exception
+     */
+    public static void deCompiler(String classFilePath, String outputPath) throws Exception {
+//        String classFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.class"; // 替换为你的.class文件路径
+//        String outputPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java";  // 替换为你想要输出的.java文件路径
+
+        // 准备CFR反编译器的参数
+        String[] cfrArgs = {classFilePath};
+
+        // 捕获反编译输出
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream oldOut = System.out;
+        PrintStream printStream = new PrintStream(baos);
+        System.setOut(printStream);
+
+        // 执行反编译
+        Main.main(cfrArgs);
+
+        // 恢复标准输出流
+        System.out.flush();
+        System.setOut(oldOut);
+
+        // 获取反编译后的内容
+        String decompiledContent = baos.toString();
+
+        // 将反编译后的内容写入文件
+        try {
+            Files.write(Paths.get(outputPath), decompiledContent.getBytes());
+            System.out.println("Decompiled file written to: " + outputPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 递归查找指定目录及其子目录中的所有.class文件
+     *
+     * @param directoryPath 要查找的目录路径
+     * @return .class文件的完整路径列表
+     */
+    public static List<String> findClassFiles(String directoryPath) {
+        List<String> classFiles = new ArrayList<>();
+        File directory = new File(directoryPath);
+
+        if (directory.exists() && directory.isDirectory()) {
+            findClassFilesRecursive(directory, classFiles);
+        } else {
+            System.out.println("Directory does not exist or is not a directory.");
+        }
+
+        return classFiles;
+    }
+
+    /**
+     * 递归方法，用于查找.class文件
+     *
+     * @param directory 当前目录
+     * @param classFiles 用于存储找到的.class文件路径的列表
+     */
+    private static void findClassFilesRecursive(File directory, List<String> classFiles) {
+        File[] files = directory.listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    findClassFilesRecursive(file, classFiles); // 递归遍历子目录
+                } else if (file.isFile() && file.getName().endsWith(".class")) {
+                    classFiles.add(file.getAbsolutePath()); // 添加.class文件路径到列表中
+                }
+            }
+        }
+    }
+}

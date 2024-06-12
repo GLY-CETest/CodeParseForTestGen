@@ -3,6 +3,11 @@ package cn.iselab.mutant.process;
 import org.benf.cfr.reader.Main;
 import org.json.JSONObject;
 
+import com.github.javaparser.StaticJavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+
 import java.util.Iterator;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,8 +28,10 @@ public class MutantFinder {
         String astPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\parsefiles\\ast_json\\Triangle.json";
         int lineNumber = mutantLineNumberFinder(filePath);
         System.out.println("Mutant lineNumber: " + lineNumber);
-        mutantMethodFinder(astPath, lineNumber);
-        deCompiler();
+        mutantMethodNameFinder(astPath, lineNumber);
+
+//        sourceCodeFinderWithMethodName();
+//        mutationCodeFinderWithMethodName();
     }
 
     public static int mutantLineNumberFinder(String path) throws Exception {
@@ -46,7 +54,7 @@ public class MutantFinder {
         }
     }
 
-    public static String mutantMethodFinder(String path, int lineNumber) throws Exception {
+    public static String mutantMethodNameFinder(String path, int lineNumber) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             // 读取 JSON 文件
@@ -84,35 +92,85 @@ public class MutantFinder {
     }
 
 
-    public static void deCompiler(String classFilePath, String outputPath) throws Exception {
-//        String classFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.class"; // 替换为你的.class文件路径
-//        String outputPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java";  // 替换为你想要输出的.java文件路径
+    public static String sourceCodeFinderWithMethodName(String sourcefilePath, String methodName) throws Exception {
+//        String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
+//        String methodName = "diffOfBorders";
 
-        // 准备CFR反编译器的参数
-        String[] cfrArgs = {classFilePath};
-
-        // 捕获反编译输出
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream oldOut = System.out;
-        PrintStream printStream = new PrintStream(baos);
-        System.setOut(printStream);
-
-        // 执行反编译
-        Main.main(cfrArgs);
-
-        // 恢复标准输出流
-        System.out.flush();
-        System.setOut(oldOut);
-
-        // 获取反编译后的内容
-        String decompiledContent = baos.toString();
-
-        // 将反编译后的内容写入文件
         try {
-            Files.write(Paths.get(outputPath), decompiledContent.getBytes());
-            System.out.println("Decompiled file written to: " + outputPath);
+            FileInputStream in = new FileInputStream(new File(sourcefilePath));
+            CompilationUnit cu = StaticJavaParser.parse(in);
+
+            MethodVisitor methodVisitor = new MethodVisitor(methodName);
+            methodVisitor.visit(cu, null);
+
+            Optional<MethodDeclaration> methodOpt = methodVisitor.getMethod();
+            if (methodOpt.isPresent()) {
+                System.out.println("Found method source code:");
+                System.out.println(methodOpt.get().toString());
+                return methodOpt.get().toString();
+            } else {
+                System.out.println("Method not found.");
+            }
+
+            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
+
+
+    public static String mutationCodeFinderWithMethodName(String mutantFilePath, String methodName) throws Exception {
+//        String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
+//        String methodName = "diffOfBorders";
+
+        try {
+            FileInputStream in = new FileInputStream(new File(mutantFilePath));
+            CompilationUnit cu = StaticJavaParser.parse(in);
+
+            MethodVisitor methodVisitor = new MethodVisitor(methodName);
+            methodVisitor.visit(cu, null);
+
+            Optional<MethodDeclaration> methodOpt = methodVisitor.getMethod();
+            if (methodOpt.isPresent()) {
+                System.out.println("Found method mutation code:");
+                System.out.println(methodOpt.get().toString());
+                return methodOpt.get().toString();
+            } else {
+                System.out.println("Method not found.");
+            }
+
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private static class MethodVisitor extends VoidVisitorAdapter<Void> {
+        private final String methodName;
+        private MethodDeclaration method;
+
+        public MethodVisitor(String methodName) {
+            this.methodName = methodName;
+        }
+
+        @Override
+        public void visit(MethodDeclaration md, Void arg) {
+            super.visit(md, arg);
+            if (md.getNameAsString().equals(methodName)) {
+                method = md;
+            }
+        }
+
+        public Optional<MethodDeclaration> getMethod() {
+            return Optional.ofNullable(method);
+        }
+    }
+
+
+
+
+
 }

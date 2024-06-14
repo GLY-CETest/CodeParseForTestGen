@@ -21,6 +21,138 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class JavaFileParser {
+
+
+    public static void main(String[] args) throws IOException {
+        String projectPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday";
+//        List<String> fileNames = searchFiles(new File(projectPath + '/' + "src/main/java"));
+        parseJavaFiles(projectPath);
+
+//        String srcPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday\\src\\main";
+//        searchFiles(new File(srcPath));
+
+//        String codefilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\src\\main\\java\\net\\mooctest\\Triangle.java";
+//        File file = new File(codefilePath);
+//
+//        JavaParser javaParser = new JavaParser();
+//        ParseResult<CompilationUnit> parse = javaParser.parse(file);
+//
+//        Optional<CompilationUnit> optionalCompilationUnit = parse.getResult();
+//        Optional<CommentsCollection> commentsCollection = parse.getCommentsCollection();
+//        if (optionalCompilationUnit.isPresent()) {
+//            CompilationUnit compilationUnit = optionalCompilationUnit.get();
+//
+//            // 遍历所有的类
+//            for (ClassOrInterfaceDeclaration c : compilationUnit.findAll(ClassOrInterfaceDeclaration.class)) {
+//                JSONArray jsonArray = new JSONArray();
+//                JSONObject classJson = new JSONObject();
+//
+//                try {
+//                    classJson.put("name", c.getName().asString());
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                try {
+//                    classJson.put("code", c.toString());
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                if (c instanceof ClassOrInterfaceDeclaration) {
+//                    classJson.put("type", "class");
+//                }
+//
+//
+//                jsonArray.put(classJson);
+//
+//                // 遍历类中的所有方法
+//                for (MethodDeclaration m : c.findAll(MethodDeclaration.class)) {
+//                    JSONObject methodJson = new JSONObject();
+//                    try {
+//                        methodJson.put("name", m.getNameAsString());
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    if (m instanceof MethodDeclaration) {
+//                        methodJson.put("type", "method");
+//                    }
+//
+//
+//                    try {
+//                        methodJson.put("code", m.getTokenRange().get().toString());
+//                        System.out.println("code" + m.toString());
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    try {
+//                        if (m.getChildNodes().toString() != null) {
+//                            methodJson.put("children", m.getChildNodes().get(1));
+//                            System.out.println("children" + m.getChildNodes().get(1));
+//                        } else {
+//                            methodJson.put("children", "");
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    m.getParentNode().ifPresent(parent -> {
+//                        if (parent instanceof ClassOrInterfaceDeclaration) {
+//                            ClassOrInterfaceDeclaration parentClass = (ClassOrInterfaceDeclaration) parent;
+//                            String parentName = parentClass.getNameAsString();
+////                            String parentType =
+//                            methodJson.put("parent", parentName);
+//                            methodJson.put("parentType", "class");
+//                            System.out.println("Method: " + m.getNameAsString() + " is in class/interface: " + parentName);
+//                        }
+//                        if (parent instanceof MethodDeclaration) {
+//                            MethodDeclaration parentMethod = (MethodDeclaration) parent;
+//                            String parentName = parentMethod.getNameAsString();
+//                            methodJson.put("parent", parentName);
+//                            methodJson.put("parentType", "method");
+//                        }
+//                    });
+//
+//                    if (m.getParameters().toString() != null) {
+//                        methodJson.put("parameters", m.getParameters().toString());
+//                        System.out.println("Parameter: " + m.getParameters().toString());
+//                    } else {
+//                        methodJson.put("parameters: ", "");
+//                    }
+//
+//                    if (m.getComment().toString() != null) {
+//
+//                        Optional<String> comment = m.getComment().map(commentNode -> commentNode.getContent());
+//
+//                        methodJson.put("comment", comment.orElse(""));
+//                        comment.ifPresent((String co) -> System.out.println("comment: " + co));
+//                    } else {
+//                        methodJson.put("comment: ", "");
+//                    }
+//
+//                    List<String> parameterTypes = m.getParameters().stream()
+//                            .map(p -> p.getType().asString())
+//                            .collect(Collectors.toList());
+//                    methodJson.put("signature", m.getName().toString() + "(" + String.join(", ", parameterTypes) + ")");
+//
+//
+//                    jsonArray.put(methodJson);
+//                    String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationGPTTestGeneration\\javaparserfile\\Triangle\\ast_json\\" + c.getName() + ".json";
+//                    saveToFile(filePath, jsonArray.toString());
+//                    System.out.println("saved to: " + "C:\\YGL\\Projects\\pythonProject\\MutationGPTTestGeneration\\javaparserfile\\Triangle\\ast_json\\" + c.getName() + ".json");
+//
+//                }
+//
+//            }
+//
+//        } else {
+//            System.out.println("Failed to parse the file.");
+//        }
+    }
+
+
     /**
      * 将字符串保存到文件
      * @param filePath
@@ -200,143 +332,12 @@ public class JavaFileParser {
                     String parseFilePath = dirPath + '/' + "target/parsefiles/ast_json/" + fileName + ".json";
                     saveToFile(parseFilePath, jsonArray.toString());
                     System.out.println("saved to: " + dirPath + '/' + "target/parsefiles/ast_json/" + fileName + ".json");
-
                 }
 
             } else {
                 System.out.println("Failed to parse the file.");
             }
         }
-    }
-
-
-    public static void main(String[] args) throws IOException {
-        String projectPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle";
-//        List<String> fileNames = searchFiles(new File(projectPath + '/' + "src/main/java"));
-        parseJavaFiles(projectPath);
-
-//        String srcPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday\\src\\main";
-//        searchFiles(new File(srcPath));
-
-//        String codefilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\src\\main\\java\\net\\mooctest\\Triangle.java";
-//        File file = new File(codefilePath);
-//
-//        JavaParser javaParser = new JavaParser();
-//        ParseResult<CompilationUnit> parse = javaParser.parse(file);
-//
-//        Optional<CompilationUnit> optionalCompilationUnit = parse.getResult();
-//        Optional<CommentsCollection> commentsCollection = parse.getCommentsCollection();
-//        if (optionalCompilationUnit.isPresent()) {
-//            CompilationUnit compilationUnit = optionalCompilationUnit.get();
-//
-//            // 遍历所有的类
-//            for (ClassOrInterfaceDeclaration c : compilationUnit.findAll(ClassOrInterfaceDeclaration.class)) {
-//                JSONArray jsonArray = new JSONArray();
-//                JSONObject classJson = new JSONObject();
-//
-//                try {
-//                    classJson.put("name", c.getName().asString());
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                try {
-//                    classJson.put("code", c.toString());
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                if (c instanceof ClassOrInterfaceDeclaration) {
-//                    classJson.put("type", "class");
-//                }
-//
-//
-//                jsonArray.put(classJson);
-//
-//                // 遍历类中的所有方法
-//                for (MethodDeclaration m : c.findAll(MethodDeclaration.class)) {
-//                    JSONObject methodJson = new JSONObject();
-//                    try {
-//                        methodJson.put("name", m.getNameAsString());
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    if (m instanceof MethodDeclaration) {
-//                        methodJson.put("type", "method");
-//                    }
-//
-//
-//                    try {
-//                        methodJson.put("code", m.getTokenRange().get().toString());
-//                        System.out.println("code" + m.toString());
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    try {
-//                        if (m.getChildNodes().toString() != null) {
-//                            methodJson.put("children", m.getChildNodes().get(1));
-//                            System.out.println("children" + m.getChildNodes().get(1));
-//                        } else {
-//                            methodJson.put("children", "");
-//                        }
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    m.getParentNode().ifPresent(parent -> {
-//                        if (parent instanceof ClassOrInterfaceDeclaration) {
-//                            ClassOrInterfaceDeclaration parentClass = (ClassOrInterfaceDeclaration) parent;
-//                            String parentName = parentClass.getNameAsString();
-////                            String parentType =
-//                            methodJson.put("parent", parentName);
-//                            methodJson.put("parentType", "class");
-//                            System.out.println("Method: " + m.getNameAsString() + " is in class/interface: " + parentName);
-//                        }
-//                        if (parent instanceof MethodDeclaration) {
-//                            MethodDeclaration parentMethod = (MethodDeclaration) parent;
-//                            String parentName = parentMethod.getNameAsString();
-//                            methodJson.put("parent", parentName);
-//                            methodJson.put("parentType", "method");
-//                        }
-//                    });
-//
-//                    if (m.getParameters().toString() != null) {
-//                        methodJson.put("parameters", m.getParameters().toString());
-//                        System.out.println("Parameter: " + m.getParameters().toString());
-//                    } else {
-//                        methodJson.put("parameters: ", "");
-//                    }
-//
-//                    if (m.getComment().toString() != null) {
-//
-//                        Optional<String> comment = m.getComment().map(commentNode -> commentNode.getContent());
-//
-//                        methodJson.put("comment", comment.orElse(""));
-//                        comment.ifPresent((String co) -> System.out.println("comment: " + co));
-//                    } else {
-//                        methodJson.put("comment: ", "");
-//                    }
-//
-//                    List<String> parameterTypes = m.getParameters().stream()
-//                            .map(p -> p.getType().asString())
-//                            .collect(Collectors.toList());
-//                    methodJson.put("signature", m.getName().toString() + "(" + String.join(", ", parameterTypes) + ")");
-//
-//
-//                    jsonArray.put(methodJson);
-//                    String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationGPTTestGeneration\\javaparserfile\\Triangle\\ast_json\\" + c.getName() + ".json";
-//                    saveToFile(filePath, jsonArray.toString());
-//                    System.out.println("saved to: " + "C:\\YGL\\Projects\\pythonProject\\MutationGPTTestGeneration\\javaparserfile\\Triangle\\ast_json\\" + c.getName() + ".json");
-//
-//                }
-//
-//            }
-//
-//        } else {
-//            System.out.println("Failed to parse the file.");
-//        }
     }
 }
 

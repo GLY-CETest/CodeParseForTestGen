@@ -6,6 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.File;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.nio.file.Files;
@@ -15,13 +18,17 @@ import java.nio.file.Path;
 public class Decompiler {
     public static void main(String[] args) throws Exception
     {
-//        deCompiler("C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.class", "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java");
         String projectPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday";
         deCompileAllClasses(projectPath);
 
-
     }
 
+
+    /**
+     * deCompile all classes in the project, including source classes and mutant classes
+     * @param projectPath the path of the project
+     * @throws Exception
+     */
     public static void deCompileAllClasses(String projectPath) throws Exception {
         Path mutantsClassPath = Paths.get(projectPath, "target/mutants");
         Path sourceClassesPath = Paths.get(projectPath, "target/classes");
@@ -43,10 +50,10 @@ public class Decompiler {
 
 
     /**
-     * 反编译一个.class文件为.java
+     * deCompile a class file to a java file
      *
-     * @param classFilePath 需要反编译的.class文件路径
-     * @param outputPath 需要输出的.java文件路径
+     * @param classFilePath the path of the class file
+     * @param outputPath the path of the output file
      * @throws Exception
      */
     public static void deCompiler(String classFilePath, String outputPath) throws Exception {
@@ -120,4 +127,7 @@ public class Decompiler {
             }
         }
     }
+
+
+
 }

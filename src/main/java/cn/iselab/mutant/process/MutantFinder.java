@@ -29,15 +29,19 @@ public class MutantFinder {
         String astPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\parsefiles\\ast_json\\Triangle.json";
         int lineNumber = mutantLineNumberFinder(filePath);
         System.out.println("Mutant lineNumber: " + lineNumber);
-        mutantMethodNameFinder(astPath, lineNumber);
+        String methodName = mutantMethodNameFinder(astPath, lineNumber);
 
         String sourceCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
         String mutationCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java";
-        String methodName = "diffOfBorders";
-        String methodSourceCode = sourceCodeFinderWithMethodName(sourceCodeFilePath, methodName);
-        String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
-        
+//        String methodName = "diffOfBorders";
+        if (methodName != null){
+            String methodSourceCode = sourceCodeFinderWithMethodName(sourceCodeFilePath, methodName);
+            String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
+            System.out.println("Method Source Code:\n" + methodSourceCode);
+            System.out.println("Method Mutation Code:\n" + methodMutationCode);
+        }
     }
+
 
     /**
      * get the lineNumber of a mutant where the mutation operator is applied
@@ -91,7 +95,7 @@ public class MutantFinder {
                         int end_line = elementNode.get("end_line").asInt();
                         if (lineNumber >= start_line && lineNumber <= end_line)
                         {
-                            System.out.println("name: " + name);
+//                            System.out.println("name: " + name);
                             return name;
                         }
                         else
@@ -102,6 +106,7 @@ public class MutantFinder {
                 }
             } else {
                 System.out.println("Root is not an array.");
+                return null;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -117,7 +122,7 @@ public class MutantFinder {
      * @return
      * @throws Exception
      */
-    public static String sourceCodeFinderWithMethodName(String sourcefilePath, String methodName) throws Exception {
+    public static @Nullable String sourceCodeFinderWithMethodName(String sourcefilePath, String methodName) throws Exception {
 //        String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
 //        String methodName = "diffOfBorders";
 
@@ -134,10 +139,10 @@ public class MutantFinder {
 //                System.out.println(methodOpt.get().toString());
                 return methodOpt.get().toString();
             } else {
-                System.out.println("Method not found.");
+//                System.out.println("Method not found.");
+                return null;
             }
-
-            in.close();
+//            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -152,7 +157,7 @@ public class MutantFinder {
      * @return
      * @throws Exception
      */
-    public static String mutationCodeFinderWithMethodName(String mutantFilePath, String methodName) throws Exception {
+    public static @Nullable String mutationCodeFinderWithMethodName(String mutantFilePath, String methodName) throws Exception {
 //        String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
 //        String methodName = "diffOfBorders";
 
@@ -165,14 +170,14 @@ public class MutantFinder {
 
             Optional<MethodDeclaration> methodOpt = methodVisitor.getMethod();
             if (methodOpt.isPresent()) {
-                System.out.println("Found method mutation code:");
-                System.out.println(methodOpt.get().toString());
+//                System.out.println("Found method mutation code:");
+//                System.out.println(methodOpt.get().toString());
                 return methodOpt.get().toString();
             } else {
-                System.out.println("Method not found.");
+//                System.out.println("Method not found.");
+                return null;
             }
-
-            in.close();
+//            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

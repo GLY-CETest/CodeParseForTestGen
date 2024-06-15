@@ -1,6 +1,7 @@
 package cn.iselab.mutant.process;
 
 import org.benf.cfr.reader.Main;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import com.github.javaparser.StaticJavaParser;
@@ -30,10 +31,20 @@ public class MutantFinder {
         System.out.println("Mutant lineNumber: " + lineNumber);
         mutantMethodNameFinder(astPath, lineNumber);
 
-//        sourceCodeFinderWithMethodName();
-//        mutationCodeFinderWithMethodName();
+        String sourceCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
+        String mutationCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java";
+        String methodName = "diffOfBorders";
+        String methodSourceCode = sourceCodeFinderWithMethodName(sourceCodeFilePath, methodName);
+        String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
+        
     }
 
+    /**
+     * get the lineNumber of a mutant where the mutation operator is applied
+     * @param path
+     * @return lineNumber
+     * @throws Exception
+     */
     public static int mutantLineNumberFinder(String path) throws Exception {
 //        File file = new File(path);
         int lineNumber = 0;
@@ -46,15 +57,22 @@ public class MutantFinder {
             lineNumber = jsonObject.getInt("lineNumber");
             // 打印lineNumber的值
 //            System.out.println("lineNumber: " + lineNumber);
+            return lineNumber;
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
             return lineNumber;
         }
     }
 
-    public static String mutantMethodNameFinder(String path, int lineNumber) throws Exception {
+
+    /**
+     * get the methodName of a mutant
+     * @param path
+     * @param lineNumber
+     * @return methodName
+     * @throws Exception
+     */
+    public static @Nullable String mutantMethodNameFinder(String path, int lineNumber) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             // 读取 JSON 文件
@@ -92,6 +110,13 @@ public class MutantFinder {
     }
 
 
+    /**
+     * get the sourceCode of a method
+     * @param sourcefilePath
+     * @param methodName
+     * @return
+     * @throws Exception
+     */
     public static String sourceCodeFinderWithMethodName(String sourcefilePath, String methodName) throws Exception {
 //        String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
 //        String methodName = "diffOfBorders";
@@ -105,8 +130,8 @@ public class MutantFinder {
 
             Optional<MethodDeclaration> methodOpt = methodVisitor.getMethod();
             if (methodOpt.isPresent()) {
-                System.out.println("Found method source code:");
-                System.out.println(methodOpt.get().toString());
+//                System.out.println("Found method source code:");
+//                System.out.println(methodOpt.get().toString());
                 return methodOpt.get().toString();
             } else {
                 System.out.println("Method not found.");
@@ -120,6 +145,13 @@ public class MutantFinder {
     }
 
 
+    /**
+     * get the code of a mutant
+     * @param mutantFilePath
+     * @param methodName
+     * @return
+     * @throws Exception
+     */
     public static String mutationCodeFinderWithMethodName(String mutantFilePath, String methodName) throws Exception {
 //        String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
 //        String methodName = "diffOfBorders";
@@ -148,6 +180,9 @@ public class MutantFinder {
     }
 
 
+    /**
+     *
+     */
     private static class MethodVisitor extends VoidVisitorAdapter<Void> {
         private final String methodName;
         private MethodDeclaration method;
@@ -168,9 +203,5 @@ public class MutantFinder {
             return Optional.ofNullable(method);
         }
     }
-
-
-
-
 
 }

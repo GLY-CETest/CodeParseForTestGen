@@ -7,6 +7,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * pacakge a certain maven project to a jar file
+ * @Author: YGL
+ */
 public class ProjectPackage {
 
     public static void main(String[] args) throws IOException, InterruptedException {

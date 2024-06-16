@@ -6,8 +6,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.File;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 
-public class Decompiler {
+public class CFRDecompiler {
     public static void main(String[] args) throws Exception
     {
         String projectPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday";
@@ -40,11 +38,11 @@ public class Decompiler {
 //        System.out.println("Found .class files:");
         System.out.println("-----Decompiling source classes-----");
         for (String filePath : sourceClassesFiles) {
-            deCompiler(filePath, filePath.replace(".class", ".java"));
+            deCompileWithCFR(filePath, filePath.replace(".class", ".java"));
         }
         System.out.println("-----Decompiling mutant classes-----");
         for (String filePath : mutantsClassesFiles) {
-            deCompiler(filePath, filePath.replace(".class", ".java"));
+            deCompileWithCFR(filePath, filePath.replace(".class", ".java"));
         }
     }
 
@@ -56,7 +54,7 @@ public class Decompiler {
      * @param outputPath the path of the output file
      * @throws Exception
      */
-    public static void deCompiler(String classFilePath, String outputPath) throws Exception {
+    public static void deCompileWithCFR(String classFilePath, String outputPath) throws Exception {
 //        String classFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.class"; // 替换为你的.class文件路径
 //        String outputPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java";  // 替换为你想要输出的.java文件路径
 
@@ -87,6 +85,9 @@ public class Decompiler {
             e.printStackTrace();
         }
     }
+
+
+
 
 
     /**

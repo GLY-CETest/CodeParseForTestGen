@@ -31,8 +31,8 @@ public class MutantFinder {
         System.out.println("Mutant lineNumber: " + lineNumber);
         String methodName = mutantMethodNameFinder(astPath, lineNumber);
 
-        String sourceCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
-        String mutationCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\mutants\\1\\net\\mooctest\\Triangle.java";
+        String sourceCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Day.java"; // 替换为你的.java文件路径
+        String mutationCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday\\target\\mutants\\1\\net\\mooctest\\Day.java";
 //        String methodName = "diffOfBorders";
         if (methodName != null){
             String methodSourceCode = sourceCodeFinderWithMethodName(sourceCodeFilePath, methodName);

@@ -29,7 +29,7 @@ public class JavaFileParser {
 
 
     public static void main(String[] args) throws IOException {
-        String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday";
+        String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Triangle";
 //        List<String> fileNames = searchFiles(new File(projectPath + '/' + "src/main/java"));
         parseJavaFiles(projectPath);
 

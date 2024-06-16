@@ -31,14 +31,15 @@ public class MutantFinder {
         System.out.println("Mutant lineNumber: " + lineNumber);
         String methodName = mutantMethodNameFinder(astPath, lineNumber);
 
-        String sourceCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Day.java"; // 替换为你的.java文件路径
-        String mutationCodeFilePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday\\target\\mutants\\1\\net\\mooctest\\Day.java";
+        String sourceCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Day.java"; // 替换为你的.java文件路径
+        String mutationCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\net\\mooctest\\Day.java";
 //        String methodName = "diffOfBorders";
         if (methodName != null){
             String methodSourceCode = sourceCodeFinderWithMethodName(sourceCodeFilePath, methodName);
             String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
             System.out.println("Method Source Code:\n" + methodSourceCode);
             System.out.println("Method Mutation Code:\n" + methodMutationCode);
+            findDetailedCodeDifferences(methodSourceCode, methodMutationCode);
         }
     }
 
@@ -147,6 +148,33 @@ public class MutantFinder {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    /**
+     * find the detailed code differences between two methods, return the differences and line numbers
+     * @param original
+     * @param mutated
+     */
+    public static void findDetailedCodeDifferences(String original, String mutated) {
+        String[] originalLines = original.split("\n");
+        String[] mutatedLines = mutated.split("\n");
+
+        int maxLines = Math.max(originalLines.length, mutatedLines.length);
+
+        System.out.println("Differences found:");
+
+        for (int i = 0; i < maxLines; i++) {
+            String originalLine = i < originalLines.length ? originalLines[i] : "";
+            String mutatedLine = i < mutatedLines.length ? mutatedLines[i] : "";
+
+            if (!originalLine.equals(mutatedLine)) {
+                System.out.println("Line " + (i + 1) + ":");
+                System.out.println("Original: " + originalLine);
+                System.out.println("Mutated : " + mutatedLine);
+                System.out.println();
+            }
+        }
     }
 
 

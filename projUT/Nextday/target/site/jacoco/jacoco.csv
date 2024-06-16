@@ -1,7 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-Nextday,net.mooctest,CalendarUnit,10,0,0,0,4,0,3,0,3,0
-Nextday,net.mooctest,Year,106,0,26,0,24,0,20,0,7,0
-Nextday,net.mooctest,Nextday,17,3,0,0,3,1,1,1,1,1
-Nextday,net.mooctest,Month,153,0,20,0,27,0,17,0,7,0
-Nextday,net.mooctest,Day,82,0,18,0,22,0,15,0,6,0
-Nextday,net.mooctest,Date,131,0,12,0,22,0,14,0,8,0

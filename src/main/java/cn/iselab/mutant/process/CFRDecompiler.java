@@ -13,6 +13,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 
+
+/**
+ * 使用CFR进行反编译，由于反编译出的代码与源代码差别较大，暂时放弃不用
+ */
 public class CFRDecompiler {
     public static void main(String[] args) throws Exception
     {

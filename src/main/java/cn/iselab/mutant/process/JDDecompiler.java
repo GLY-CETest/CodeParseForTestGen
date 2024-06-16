@@ -18,7 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-
+/**
+ * 使用JD-Core进行反编译，暂时用不了
+ */
 
 public class JDDecompiler {
 

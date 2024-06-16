@@ -15,7 +15,7 @@ public class ProjectPackage {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         // 指定maven项目的根目录
-        String projectDir = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Nextday";
+        String projectDir = "C:\\YGL\\Projects\\CodeParse\\projUT\\Triangle";
         packageProjectToJar(projectDir);
     }
 

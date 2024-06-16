@@ -20,6 +20,11 @@ import java.io.FileWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+/**
+ * 目前使用这个进行解析
+ * Parse Java files and extract method information
+ */
 public class JavaFileParser {
 
 

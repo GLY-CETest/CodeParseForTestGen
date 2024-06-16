@@ -1,0 +1,35 @@
+[
+  {
+    "methodCalls": [
+      {
+        "line": 5,
+        "calledMethodName": "getCurrentPos"
+      },
+      {
+        "line": 5,
+        "calledMethodName": "getMonth"
+      },
+      {
+        "line": 5,
+        "calledMethodName": "getCurrentPos"
+      },
+      {
+        "line": 5,
+        "calledMethodName": "getDay"
+      },
+      {
+        "line": 5,
+        "calledMethodName": "getCurrentPos"
+      },
+      {
+        "line": 5,
+        "calledMethodName": "getYear"
+      },
+      {
+        "line": 6,
+        "calledMethodName": "increment"
+      }
+    ],
+    "methodName": "nextDay"
+  }
+]

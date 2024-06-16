@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Date",
+	"id":26,
+	"lineNumber":14,
+	"methodSignature":"increment()V",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.NegateConditionalsMutator",
+	"sourceFile":"Date.java"
+}

@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Day",
+	"id":63,
+	"lineNumber":6,
+	"methodSignature":"<init>(ILnet/mooctest/Month;)V",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator",
+	"sourceFile":"Day.java"
+}

@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Nextday",
+	"id":118,
+	"lineNumber":7,
+	"methodSignature":"nextDay(Lnet/mooctest/Date;)Lnet/mooctest/Date;",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.returns.NullReturnValsMutator",
+	"sourceFile":"Nextday.java"
+}

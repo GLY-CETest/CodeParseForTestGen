@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Triangle",
+	"id":34,
+	"lineNumber":83,
+	"methodSignature":"diffOfBorders(JJ)J",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.returns.PrimitiveReturnsMutator",
+	"sourceFile":"Triangle.java"
+}

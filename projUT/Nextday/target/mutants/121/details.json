@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Month",
+	"id":121,
+	"lineNumber":19,
+	"methodSignature":"getMonth()I",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.returns.PrimitiveReturnsMutator",
+	"sourceFile":"Month.java"
+}

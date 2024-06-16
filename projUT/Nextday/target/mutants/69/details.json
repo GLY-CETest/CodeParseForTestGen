@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Year",
+	"id":69,
+	"lineNumber":8,
+	"methodSignature":"setYear(I)V",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator",
+	"sourceFile":"Year.java"
+}

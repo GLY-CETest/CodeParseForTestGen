@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Day",
+	"id":120,
+	"lineNumber":26,
+	"methodSignature":"getDay()I",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.returns.PrimitiveReturnsMutator",
+	"sourceFile":"Day.java"
+}

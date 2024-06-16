@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Day",
+	"id":74,
+	"lineNumber":12,
+	"methodSignature":"increment()Z",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator",
+	"sourceFile":"Day.java"
+}

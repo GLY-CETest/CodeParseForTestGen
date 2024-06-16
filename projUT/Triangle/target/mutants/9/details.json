@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Triangle",
+	"id":9,
+	"lineNumber":39,
+	"methodSignature":"isTriangle(Lnet/mooctest/Triangle;)Z",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator",
+	"sourceFile":"Triangle.java"
+}

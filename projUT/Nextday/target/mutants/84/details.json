@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Year",
+	"id":84,
+	"lineNumber":44,
+	"methodSignature":"equals(Ljava/lang/Object;)Z",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator",
+	"sourceFile":"Year.java"
+}

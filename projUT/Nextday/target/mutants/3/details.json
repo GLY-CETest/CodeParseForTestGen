@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Day",
+	"id":3,
+	"lineNumber":31,
+	"methodSignature":"isValid()Z",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator",
+	"sourceFile":"Day.java"
+}

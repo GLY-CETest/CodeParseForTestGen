@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Month",
+	"id":4,
+	"lineNumber":32,
+	"methodSignature":"increment()Z",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.ConditionalsBoundaryMutator",
+	"sourceFile":"Month.java"
+}

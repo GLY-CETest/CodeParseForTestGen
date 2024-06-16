@@ -1,0 +1,8 @@
+{
+	"className":"net.mooctest.Triangle",
+	"id":32,
+	"lineNumber":75,
+	"methodSignature":"getType(Lnet/mooctest/Triangle;)Ljava/lang/String;",
+	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.returns.EmptyObjectReturnValsMutator",
+	"sourceFile":"Triangle.java"
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "methodCalls": [
+      {
+        "line": 11,
+        "calledMethodName": "setCurrentPos"
+      },
+      {
+        "line": 13,
+        "calledMethodName": "isValid"
+      }
+    ],
+    "methodName": "setMonth"
+  },
+  {
+    "methodCalls": [],
+    "methodName": "getMonth"
+  },
+  {
+    "methodCalls": [
+      {
+        "line": 23,
+        "calledMethodName": "isLeap"
+      }
+    ],
+    "methodName": "getMonthSize"
+  },
+  {
+    "methodCalls": [],
+    "methodName": "increment"
+  },
+  {
+    "methodCalls": [
+      {
+        "line": 39,
+        "calledMethodName": "isValid"
+      }
+    ],
+    "methodName": "isValid"
+  },
+  {
+    "methodCalls": [
+      {
+        "line": 49,
+        "calledMethodName": "equals"
+      }
+    ],
+    "methodName": "equals"
+  }
+]

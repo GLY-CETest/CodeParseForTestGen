@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import cn.iselab.mutant.process.ProjectPackaging;
 import cn.iselab.mutant.generating.GenMutantsNoCommandArgs;
+import cn.iselab.mutant.process.FernflowerDecompiler;
+import cn.iselab.codeparse.JavaFileParser;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -19,11 +21,20 @@ public class Main {
             List<String> jarFiles = ProjectPackaging.findJarFiles(projectDir);
             String jarFilePath = jarFiles.get(0);
             System.out.println(String.format("Jar file path is: %s", jarFilePath));
+
+            System.out.println(String.format("----------Parsing java files in project %s----------", projectDir));
+            JavaFileParser.parseJavaFiles(projectDir);
+
             System.out.println(String.format("----------Generating mutants for project %s----------", projectDir));
             List<String> sourceJarPaths = new ArrayList<>();
             sourceJarPaths.add(jarFilePath);
             GenMutantsNoCommandArgs.generateMutantsAndOutput(sourceJarPaths,
                     projectDir + File.separator + "target" + File.separator + "mutants");
+
+            System.out.println(String.format("----------Decompiling class files in %s----------", projectDir));
+            FernflowerDecompiler.deCompileAllClassesWithFF(projectDir);
+
+
         }
     }
 

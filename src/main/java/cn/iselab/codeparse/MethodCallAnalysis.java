@@ -20,16 +20,24 @@ import java.util.Map;
 
 import java.text.MessageFormat;
 
+
+/**
+ * analysis the method calls in java files
+ */
 public class MethodCallAnalysis {
 
     public static void main(String[] args) {
-        String projectName = "Nextday";
         // 指定源码根目录
-        String sourceRootPath = MessageFormat.format("C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\{0}\\src\\main\\java", projectName);
+        String sourceRootPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday";
+        analyzeAllMethodCallsAndSaveToJson(sourceRootPath);
+    }
 
+
+    public static void analyzeAllMethodCallsAndSaveToJson(String prjectDir) {
+        String javaFileDir = prjectDir + File.separator + "src" + File.separator + "main" + File.separator + "java";
         try {
             // 遍历目录下的所有 Java 文件
-            Files.walk(Paths.get(sourceRootPath))
+            Files.walk(Paths.get(javaFileDir))
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(".java"))
                     .forEach(MethodCallAnalysis::analyzeAndSaveMethodCalls);
@@ -37,6 +45,7 @@ public class MethodCallAnalysis {
             e.printStackTrace();
         }
     }
+
 
     private static void analyzeAndSaveMethodCalls(Path javaFilePath) {
         try {
@@ -62,7 +71,9 @@ public class MethodCallAnalysis {
 
         // 构建 JSON 文件名
         String jsonFileName = javaFilePath.toString().replace(".java", ".json");
-        jsonFileName = jsonFileName.replace("src\\main\\java\\net\\mooctest", "target\\parsefiles\\method_call");
+        jsonFileName = jsonFileName.replace(
+                "src" + File.separator + "main" + File.separator + "java" + File.separator + "net" + File.separator + "mooctest",
+                "target" + File.separator + "parsefiles" + File.separator + "method_call");
         File parentDir = new File(jsonFileName).getParentFile();
         if (!parentDir.exists()){
             if (parentDir.mkdirs()) {

@@ -1,0 +1,18 @@
+[
+  {
+    "methodCalls": [],
+    "methodName": "setCurrentPos"
+  },
+  {
+    "methodCalls": [],
+    "methodName": "getCurrentPos"
+  },
+  {
+    "methodCalls": [],
+    "methodName": "increment"
+  },
+  {
+    "methodCalls": [],
+    "methodName": "isValid"
+  }
+]

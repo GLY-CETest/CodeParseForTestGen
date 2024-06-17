@@ -9,6 +9,7 @@ import cn.iselab.mutant.process.ProjectPackaging;
 import cn.iselab.mutant.generating.GenMutantsNoCommandArgs;
 import cn.iselab.mutant.process.FernflowerDecompiler;
 import cn.iselab.codeparse.JavaFileParser;
+import cn.iselab.codeparse.MethodCallAnalysis;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -16,22 +17,25 @@ public class Main {
         List<String> projectDirs = getProjectDirs(path);
 
         for (String projectDir : projectDirs) {
-            System.out.println(String.format("----------Packaging project %s----------", projectDir));
+            System.out.printf("----------Packaging project %s----------%n", projectDir);
             ProjectPackaging.packageProjectToJar(projectDir);
             List<String> jarFiles = ProjectPackaging.findJarFiles(projectDir);
             String jarFilePath = jarFiles.get(0);
-            System.out.println(String.format("Jar file path is: %s", jarFilePath));
+            System.out.printf("Jar file path is: %s%n", jarFilePath);
 
-            System.out.println(String.format("----------Parsing java files in project %s----------", projectDir));
+            System.out.printf("----------Parsing java files in project %s----------%n", projectDir);
             JavaFileParser.parseJavaFiles(projectDir);
 
-            System.out.println(String.format("----------Generating mutants for project %s----------", projectDir));
+            System.out.printf("----------Analyzing method calls in project %s----------%n", projectDir);
+            MethodCallAnalysis.analyzeAllMethodCallsAndSaveToJson(projectDir);
+
+            System.out.printf("----------Generating mutants for project %s----------%n", projectDir);
             List<String> sourceJarPaths = new ArrayList<>();
             sourceJarPaths.add(jarFilePath);
             GenMutantsNoCommandArgs.generateMutantsAndOutput(sourceJarPaths,
                     projectDir + File.separator + "target" + File.separator + "mutants");
 
-            System.out.println(String.format("----------Decompiling class files in %s----------", projectDir));
+            System.out.printf("----------Decompiling class files in %s----------%n", projectDir);
             FernflowerDecompiler.deCompileAllClassesWithFF(projectDir);
 
 

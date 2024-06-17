@@ -38,7 +38,6 @@ public class Main {
             System.out.printf("----------Decompiling class files in %s----------%n", projectDir);
             FernflowerDecompiler.deCompileAllClassesWithFF(projectDir);
 
-
         }
     }
 

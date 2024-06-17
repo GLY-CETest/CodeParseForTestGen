@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author Adian Qian
  */
-public class GenMutants {
+public class GenMutantsNoCommandArgs {
 
     // Log info and output at last.
     private static final JsonMutationInfo mutationInfo = new JsonMutationInfo();
@@ -40,66 +40,38 @@ public class GenMutants {
     private static boolean copyInner;
 
     // Common classes copied for every mutants.
-    private static List<String> commonClasses;
+    private static List<String> commonClasses = new ArrayList<>();
 
     public static void main(String[] args) {
-        System.out.println(args.length);
-        for(String arg : args){
-            System.out.println(arg);
-        }
-        // Create cmd instance.
-        CmdArgs cmdArgs = new CmdArgs();
-        JCommander cmd = JCommander.newBuilder().addObject(cmdArgs).build();
+        List<String> sourceJarPaths = new ArrayList<>();
+        sourceJarPaths.add("C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\Nextday-0.0.1-SNAPSHOT.jar");
+        generateMutantsAndOutput(sourceJarPaths, "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants");
 
-        // Set name.
-        cmd.setProgramName(GenMutants.class.getName(), "mutation engine based one PIT");
-
-        // Parse arguments.
-        try {
-            cmd.parse(args);
-        } catch (ParameterException e) {
-            // Show usage if any mistakes occur.
-            cmd.usage();
-            System.exit(1);
-        }
-
-        // Show usage if contains -h
-        if (cmdArgs.help) {
-            cmd.usage();
-            System.exit(0);
-        }
-
-        System.out.println("<cmdArgs>: " + cmdArgs + "<\ncmdArgs>");
-
-        // Initialize globals except for jar loader (as it may raise exception).
-        copyInner = cmdArgs.copyInnerClasses;
-        commonClasses = cmdArgs.commonClasses;
+    }
 
 
-        // Generation process.
-        // Refresh output directory
-        prepareOutputDirectory(cmdArgs.outputDir);
-
-        // Record inclusions and exclusions.
-        mutationInfo.setCommonClasses(cmdArgs.commonClasses);
-        mutationInfo.setInclusions(cmdArgs.inclusions);
-        mutationInfo.setExclusions(cmdArgs.exclusions);
+    public static void generateMutantsAndOutput(List<String> sourceJarPaths, String outputDir){
+        prepareOutputDirectory(new File(outputDir));
 
         try {
             // Load original classes to be mutated.
-            sourceJarLoader = new SourceJarLoader(pathsToFileArray(cmdArgs.sourceJarPaths));
+            sourceJarLoader = new SourceJarLoader(pathsToFileArray(sourceJarPaths));
             ClassloaderByteArraySource source = new ClassloaderByteArraySource(sourceJarLoader);
 
+            List<String> mutators = null;
             // Initiate mutater.
-            Mutater mutater = instantiateMutater(source, cmdArgs.mutators);
+            Mutater mutater = instantiateMutater(source, mutators);
 //            System.out.println("mutators: " + cmdArgs.mutators.toString());
 
             // Compute classes to be mutated.
+            List<String> inclusions = null;
+            List<String> exclusions = null;
             List<String> targetClassFQNs = computeTargetClassFQNs(
-                sourceJarLoader.getLoadedClassFQNs(), cmdArgs.inclusions, cmdArgs.exclusions);
+                    sourceJarLoader.getLoadedClassFQNs(), inclusions, exclusions);
 
             // Create mutants and output.
-            createMutantsAndOutput(targetClassFQNs, mutater, cmdArgs.outputDir);
+            File outputDirFile = new File(outputDir);
+            createMutantsAndOutput(targetClassFQNs, mutater, outputDirFile);
 
         } catch (IOException e) {
             System.out.println("Error when doing mutations!");
@@ -109,13 +81,12 @@ public class GenMutants {
 
         // Dump mutation info if successful.
         try {
-            dumpInfo(cmdArgs.outputDir);
+            dumpInfo(new File(outputDir));
         } catch (IOException e) {
             System.out.println(
-                "Error when dump mutation info! Message: " + e.getMessage());
+                    "Error when dump mutation info! Message: " + e.getMessage());
             System.exit(4);
         }
-
     }
 
     /**
@@ -247,7 +218,6 @@ public class GenMutants {
             // Write mutant details.
             File detailsFile = new File(sepDir, "details.json");
             System.out.println("mutantJson: " + mutantJson.toString());
-            System.out.println("mutant: " + mutant.toString());
             FileUtils.writeContentIntoFile(detailsFile, JSON.toJSONString(mutantJson, true));
 
             //将变异体保存为.class

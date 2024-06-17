@@ -3,6 +3,8 @@
 	"nAllMutants":123,
 	"nMutators":11,
 	"commonClasses":[],
+	"exclusions":[],
+	"inclusions":[],
 	"mutators":[
 		"INVERT_NEGS",
 		"MATH",

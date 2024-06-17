@@ -13,23 +13,23 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
+
 public class FernflowerDecompiler {
     public static void main(String[] args) throws Exception {
-
-//        String classPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Day.class";
-//        String outputDir = "C:\\YGL\\Projects\\CodeParse\\libs";
-//        excuteFernflower(classPath, outputDir);
         String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday";
         deCompileAllClassesWithFF(projectPath);
-
     }
 
 
-    public static void deCompileAllClassesWithFF(String projectPath) throws Exception {
-        Path mutantsClassPath = Paths.get(projectPath, "target/mutants");
-        Path sourceClassesPath = Paths.get(projectPath, "target/classes");
+    /**
+     * Decompile all classes of a project to java files with Fernflower.
+     * @param projectDir
+     * @throws Exception
+     */
+    public static void deCompileAllClassesWithFF(String projectDir) throws Exception {
+        Path mutantsClassPath = Paths.get(projectDir, "target/mutants");
+        Path sourceClassesPath = Paths.get(projectDir, "target/classes");
 
-//        String directoryPath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes"; // 替换为你的目录路径
 
         List<String> sourceClassesFiles = findClassFiles(sourceClassesPath.toString());
         List<String> mutantsClassesFiles = findClassFiles(mutantsClassPath.toString());
@@ -59,20 +59,15 @@ public class FernflowerDecompiler {
                 classFilePath,
                 outputDir
         };
-
-        // 打印命令以供调试
+        // Print the command to console
         System.out.println("Executing command: " + Arrays.toString(command));
-
-        // 使用ProcessBuilder执行命令
+        // Execute the command
         ProcessBuilder processBuilder = new ProcessBuilder(command);
-
-        // 设置工作目录
-        processBuilder.directory(new java.io.File("C:\\YGL\\Projects\\CodeParse\\libs"));
-
+        // Set the working directory
+//        processBuilder.directory(new java.io.File(System.getProperty("user.dir") + File.separator + "libs"));
         try {
             Process process = processBuilder.start();
-
-            // 获取命令行输出（如果有）
+            // Get the command output
             new Thread(() -> {
                 try (java.io.BufferedReader reader = new java.io.BufferedReader(
                         new java.io.InputStreamReader(process.getInputStream()))) {
@@ -84,8 +79,7 @@ public class FernflowerDecompiler {
                     e.printStackTrace();
                 }
             }).start();
-
-            // 获取命令行错误输出（如果有）
+            // Get the command error
             new Thread(() -> {
                 try (java.io.BufferedReader reader = new java.io.BufferedReader(
                         new java.io.InputStreamReader(process.getErrorStream()))) {
@@ -97,8 +91,7 @@ public class FernflowerDecompiler {
                     e.printStackTrace();
                 }
             }).start();
-
-            // 等待进程完成
+            // Wait for the command to finish
             int exitCode = process.waitFor();
             System.out.println("Command executed with exit code: " + exitCode);
         } catch (IOException | InterruptedException e) {
@@ -106,11 +99,12 @@ public class FernflowerDecompiler {
         }
     }
 
+
     /**
-     * 递归查找指定目录及其子目录中的所有.class文件
+     * Recursively search for all .class files in a specified directory and its subdirectories.
      *
-     * @param directoryPath 要查找的目录路径
-     * @return .class文件的完整路径列表
+     * @param directoryPath the directory path to search
+     * @return a list of all paths of .class files in the specified directory and its subdirectories
      */
     public static @NotNull List<String> findClassFiles(String directoryPath) {
         List<String> classFiles = new ArrayList<>();
@@ -125,11 +119,13 @@ public class FernflowerDecompiler {
         return classFiles;
     }
 
+
     /**
-     * 递归方法，用于查找.class文件
      *
-     * @param directory 当前目录
-     * @param classFiles 用于存储找到的.class文件路径的列表
+     * Recursively search for .class files recursively
+     *
+     * @param directory
+     * @param classFiles
      */
     private static void findClassFilesRecursive(File directory, List<String> classFiles) {
         File[] files = directory.listFiles();
@@ -137,13 +133,11 @@ public class FernflowerDecompiler {
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
-                    findClassFilesRecursive(file, classFiles); // 递归遍历子目录
+                    findClassFilesRecursive(file, classFiles);
                 } else if (file.isFile() && file.getName().endsWith(".class")) {
-                    classFiles.add(file.getAbsolutePath()); // 添加.class文件路径到列表中
+                    classFiles.add(file.getAbsolutePath());
                 }
             }
         }
     }
-
-
 }

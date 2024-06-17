@@ -4,6 +4,9 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.resolution.types.ResolvedType;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -19,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import java.text.MessageFormat;
+import java.util.stream.Collectors;
 
 
 /**
@@ -107,6 +111,10 @@ public class MethodCallAnalysis {
             // 创建一个 Map 来存储方法信息
             Map<String, Object> methodInfo = new HashMap<>();
             methodInfo.put("methodName", md.getNameAsString());
+            List<String> parameterTypes = md.getParameters().stream()
+                    .map(p -> p.getType().asString())
+                    .collect(Collectors.toList());
+            methodInfo.put("signature", md.getName().toString() + "(" + String.join(", ", parameterTypes) + ")");
             methodInfo.put("methodCalls", new ArrayList<Map<String, Object>>());
 
             // 查找方法调用
@@ -115,6 +123,7 @@ public class MethodCallAnalysis {
                 Map<String, Object> callInfo = new HashMap<>();
                 callInfo.put("calledMethodName", mce.getNameAsString());
                 callInfo.put("line", mce.getBegin().get().line);
+
                 ((List<Map<String, Object>>) methodInfo.get("methodCalls")).add(callInfo);
             }
 

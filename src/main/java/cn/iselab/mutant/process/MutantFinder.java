@@ -32,7 +32,7 @@ public class MutantFinder {
         String methodName = mutantMethodNameFinder(astPath, lineNumber);
         System.out.println("Mutant method name: " + methodName);
 
-        String sourceCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Day.java"; // 替换为你的.java文件路径
+        String sourceCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Day.java";
         String mutationCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\net\\mooctest\\Day.java";
 //        String methodName = "diffOfBorders";
         if (methodName != null){

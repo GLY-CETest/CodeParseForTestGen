@@ -29,7 +29,7 @@ public class JavaFileParser {
 
 
     public static void main(String[] args) throws IOException {
-        String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Triangle";
+        String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday";
 //        List<String> fileNames = searchFiles(new File(projectPath + '/' + "src/main/java"));
         parseJavaFiles(projectPath);
 
@@ -324,7 +324,8 @@ public class JavaFileParser {
                         List<String> parameterTypes = m.getParameters().stream()
                                 .map(p -> p.getType().asString())
                                 .collect(Collectors.toList());
-                        methodJson.put("signature", m.getName().toString() + "(" + String.join(", ", parameterTypes) + ")");
+//                        methodJson.put("signature", m.getName().toString() + "(" + String.join(", ", parameterTypes) + ")");
+                        methodJson.put("signature", m.getDeclarationAsString());
 
 
                         jsonArray.put(methodJson);

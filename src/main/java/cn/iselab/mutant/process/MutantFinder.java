@@ -9,6 +9,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +22,8 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.google.gson.JsonObject;
 
 
 public class MutantFinder {
@@ -36,13 +39,19 @@ public class MutantFinder {
         String mutationCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\net\\mooctest\\Day.java";
 //        String methodName = "diffOfBorders";
         if (methodName != null){
-            String methodSourceCode = sourceCodeFinderWithMethodName(sourceCodeFilePath, methodName);
+            String methodSourceCode = originCodeFinderWithMethodName(sourceCodeFilePath, methodName);
             String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
-            System.out.println("Method Source Code:\n" + methodSourceCode);
-            System.out.println("Method Mutation Code:\n" + methodMutationCode);
+            System.out.println("method_original_code:\n" + methodSourceCode);
+            System.out.println("method_mutated_ode:\n" + methodMutationCode);
             findDetailedCodeDifferences(methodSourceCode, methodMutationCode);
         }
     }
+
+
+//    public static JsonObject detailsOfMuAndOri() {
+//        JsonObject jsonObject = new JsonObject();
+//
+//    }
 
 
     /**
@@ -124,7 +133,7 @@ public class MutantFinder {
      * @return
      * @throws Exception
      */
-    public static @Nullable String sourceCodeFinderWithMethodName(String sourcefilePath, String methodName) throws Exception {
+    public static @Nullable String originCodeFinderWithMethodName(String sourcefilePath, String methodName) throws Exception {
 //        String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
 //        String methodName = "diffOfBorders";
 
@@ -157,7 +166,8 @@ public class MutantFinder {
      * @param original
      * @param mutated
      */
-    public static void findDetailedCodeDifferences(String original, String mutated) {
+    public static JsonObject findDetailedCodeDifferences(String original, String mutated) {
+        JsonObject jsonObject = new JsonObject();
         String[] originalLines = original.split("\n");
         String[] mutatedLines = mutated.split("\n");
 
@@ -170,12 +180,15 @@ public class MutantFinder {
             String mutatedLine = i < mutatedLines.length ? mutatedLines[i] : "";
 
             if (!originalLine.equals(mutatedLine)) {
-                System.out.println("Line " + (i + 1) + ":");
-                System.out.println("Original: " + originalLine);
-                System.out.println("Mutated : " + mutatedLine);
-                System.out.println();
+                System.out.println("line_in_method: " + i);
+                System.out.println("line_original: " + originalLine);
+                System.out.println("line_mutated : " + mutatedLine);
+                jsonObject.addProperty("line", i);
+                jsonObject.addProperty("original", originalLine);
+                jsonObject.addProperty("mutated", mutatedLine);
             }
         }
+        return jsonObject;
     }
 
 

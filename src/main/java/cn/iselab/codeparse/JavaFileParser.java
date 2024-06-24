@@ -335,7 +335,7 @@ public class JavaFileParser {
 
                     }
 
-                    String parseFilePath = dirPath + '/' + "target/parsefiles/ast_json/" + fileName + ".json";
+                    String parseFilePath = dirPath + File.separator + "target/parsefiles/ast_json/" + fileName + ".json";
                     saveToFile(parseFilePath, jsonArray.toString());
                     System.out.println("saved to: " + dirPath + '/' + "target/parsefiles/ast_json/" + fileName + ".json");
                 }

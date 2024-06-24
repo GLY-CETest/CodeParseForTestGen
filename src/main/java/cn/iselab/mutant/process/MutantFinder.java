@@ -25,33 +25,52 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.gson.JsonObject;
 
+import cn.iselab.utils.Utils;
+
 
 public class MutantFinder {
     public static void main(String[] args) throws Exception {
-        String filePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\details.json";
-        String astPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\parsefiles\\ast_json\\Day.json";
-        int lineNumber = mutantLineNumberFinder(filePath);
-        System.out.println("Mutant lineNumber: " + lineNumber);
-        String methodName = mutantMethodNameFinder(astPath, lineNumber);
-        System.out.println("Mutant method name: " + methodName);
 
-        String sourceCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Day.java";
-        String mutationCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\net\\mooctest\\Day.java";
-//        String methodName = "diffOfBorders";
-        if (methodName != null){
-            String methodSourceCode = originCodeFinderWithMethodName(sourceCodeFilePath, methodName);
-            String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
-            System.out.println("method_original_code:\n" + methodSourceCode);
-            System.out.println("method_mutated_ode:\n" + methodMutationCode);
-            findDetailedCodeDifferences(methodSourceCode, methodMutationCode);
-        }
     }
 
 
-//    public static JsonObject detailsOfMuAndOri() {
-//        JsonObject jsonObject = new JsonObject();
-//
-//    }
+    public static void detailsOfMuAndOriToJson(String projectPath) throws Exception {
+        String mutantsDir = projectPath + File.separator + "target" + File.separator + "mutants";
+        long mutantnumber = Utils.folderCounter(mutantsDir);
+
+        for (int i = 1; i <= mutantnumber; i++) {
+            String mutantDetailsPath = mutantsDir + File.separator + i + File.separator + "details.json";
+            String astPath = mutantsDir + File.separator + i + File.separator + "ast_json" + File.separator + "Day.json";
+            JsonObject jsonObject = new JsonObject();
+            int lineNumber = mutantLineNumberFinder(mutantDetailsPath);
+            System.out.println("mutant_linenumber: " + lineNumber);
+            jsonObject.addProperty("mutant_lineNumber: ", lineNumber);
+            String methodName = mutantMethodNameFinder(astPath, lineNumber);
+            System.out.println("mutant_method_name: " + methodName);
+            jsonObject.addProperty("mutant_method_name: ", methodName);
+
+            if (methodName != null) {
+                String methodSourceCode = originCodeFinderWithMethodName(originCodeFilePath, methodName);
+                String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
+                System.out.println("method_original_code:\n" + methodSourceCode);
+                jsonObject.addProperty("method_original_code:", methodSourceCode);
+                System.out.println("method_mutated_code:\n" + methodMutationCode);
+                jsonObject.addProperty("method_mutated_code:", methodMutationCode);
+                findDetailedCodeDifferences(methodSourceCode, methodMutationCode);
+            }
+
+
+//        String mutantDetailsPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\details.json";
+//        String astPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\parsefiles\\ast_json\\Day.json";
+
+
+//        String originCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Day.java";
+//        String mutationCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\net\\mooctest\\Day.java";
+//        String methodName = "diffOfBorders";
+
+
+        }
+    }
 
 
     /**
@@ -180,11 +199,11 @@ public class MutantFinder {
             String mutatedLine = i < mutatedLines.length ? mutatedLines[i] : "";
 
             if (!originalLine.equals(mutatedLine)) {
-                System.out.println("line_in_method: " + i);
+                System.out.println("linenum_in_method: " + i);
                 System.out.println("line_original: " + originalLine);
                 System.out.println("line_mutated : " + mutatedLine);
-                jsonObject.addProperty("line", i);
-                jsonObject.addProperty("original", originalLine);
+                jsonObject.addProperty("linenum_in_method", i);
+                jsonObject.addProperty("line_original", originalLine);
                 jsonObject.addProperty("mutated", mutatedLine);
             }
         }

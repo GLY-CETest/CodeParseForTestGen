@@ -20,6 +20,8 @@ import java.io.FileWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import cn.iselab.utils.Utils;
+
 
 /**
  * 目前使用这个进行解析
@@ -159,69 +161,14 @@ public class JavaFileParser {
 
 
     /**
-     * 将字符串保存到文件
-     * @param filePath
-     * @param string
-     */
-    public static void saveToFile(String filePath, String string) {
-        File file = new File(filePath);
-        File parentDir = file.getParentFile();
-        if(!parentDir.exists()){
-            if (parentDir.mkdirs()) {
-                System.out.println("Directories created successfully.");
-            } else {
-                System.err.println("Failed to create directories.");
-                return;
-            }
-        }
-
-        try {
-            FileWriter fileWriter = new FileWriter(filePath);
-            fileWriter.write(string);
-            fileWriter.close();
-            System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * 递归查找目录中的所有源代码
-     * @param directory
-     * @return
-     */
-    public static void searchFiles(File directory, List<String> sourceFilesPath) {
-        // 获取目录下的所有文件和子目录
-        File[] files = directory.listFiles();
-//        List<String> sourceFilesPath = new ArrayList<>();
-
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile() && file.getName().endsWith(".java")) {
-                    // 打印文件路径
-                    System.out.println("File: " + file.getAbsolutePath());
-                    sourceFilesPath.add(file.getAbsolutePath());
-                } else if (file.isDirectory()) {
-                    // 递归查找子目录
-                    searchFiles(file, sourceFilesPath);
-                }
-            }
-        }
-        System.out.println(sourceFilesPath);
-//        return sourceFilesPath;
-    }
-
-    /**
      *
      * @param dirPath 被测项目根目录
      * @throws IOException
      */
     public static void parseJavaFiles(String dirPath) throws IOException {
-        File directory = new File(dirPath + '/' + "src/main/java");
+        File directory = new File(dirPath + File.separator + "src/main/java");
         List<String> sourceFilesPath = new ArrayList<>();
-        searchFiles(directory, sourceFilesPath);
+        Utils.searchJavaFiles(directory, sourceFilesPath);
         System.out.println("sourceFilesPath: " + sourceFilesPath);
         for (String sourcefilePath : sourceFilesPath) {
             File file = new File(sourcefilePath);
@@ -337,7 +284,7 @@ public class JavaFileParser {
                     }
 
                     String parseFilePath = dirPath + File.separator + "target/parsefiles/ast_json/" + fileName + ".json";
-                    saveToFile(parseFilePath, jsonArray.toString());
+                    Utils.saveJsonToFile(parseFilePath, jsonArray.toString());
                     System.out.println("saved to: " + dirPath + '/' + "target/parsefiles/ast_json/" + fileName + ".json");
                 }
 

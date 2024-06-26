@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import static cn.iselab.codeparse.JavaFileParser.searchFiles;
+import cn.iselab.utils.Utils;
 
 
 /**
@@ -59,7 +59,7 @@ public class MethodCallExtractorDelDupli {
     public static void parseMethodCalls(String dirPath){
         File directory = new File(dirPath + '/' + "src/main/java");
         List<String> sourceFilesPath = new ArrayList<>();
-        searchFiles(directory, sourceFilesPath);
+        Utils.searchJavaFiles(directory, sourceFilesPath);
 
     }
 

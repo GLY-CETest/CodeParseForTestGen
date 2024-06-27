@@ -10,12 +10,9 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,9 +37,11 @@ public class MutantFinder {
 
         for (int i = 1; i <= mutantnumber; i++) {
             String mutantDetailsPath = mutantsDir + File.separator + i + File.separator + "details.json";
-            String className = getClassName(mutantsDir + File.separator + i + File.separator + "net" + File.separator + "mooctest");
+            String className = getClassName(mutantsDir + File.separator + i);
+            System.out.println("className: " + className);
             if (className != null) {
                 String astPath = projectPath + File.separator + "target" + File.separator + "parsefiles" + File.separator + "ast_json" + File.separator + className + ".json";
+                System.out.println("astPath: " + astPath);
                 JsonObject jsonObject = new JsonObject();
                 int lineNumber = mutantLineNumberFinder(mutantDetailsPath);
                 System.out.println("mutant_linenumber: " + lineNumber) ;
@@ -50,34 +49,46 @@ public class MutantFinder {
                 String methodName = mutantMethodNameFinder(astPath, lineNumber);
                 System.out.println("mutant_method_name: " + methodName);
                 jsonObject.addProperty("mutant_method_name: ", methodName);
-
                 if (methodName != null) {
-                    String originCodeFilePath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + className + ".java";
-                    String mutationCodeFilePath = projectPath + File.separator + "target" + File.separator + "mutants"
-                            + File.separator + i + File.separator + "net" + File.separator + "mooctest" + File.separator + className + ".java";
-                    String methodSourceCode = originCodeFinderWithMethodName(originCodeFilePath, methodName);
-                    String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
-                    System.out.println("method_original_code:\n" + methodSourceCode);
-                    jsonObject.addProperty("method_original_code:", methodSourceCode);
-                    System.out.println("method_mutated_code:\n" + methodMutationCode);
-                    jsonObject.addProperty("method_mutated_code:", methodMutationCode);
-                    findDetailedCodeDifferences(methodSourceCode, methodMutationCode);
-                    String jsonPath = mutantsDir + File.separator + i + File.separator + "mutantDetails.json";
-                    Utils.saveJsonToFile(jsonPath, jsonObject.getAsString());
+
                 }
-                else continue;
             }
             else continue;
+//            if (className != null) {
+//                String astPath = projectPath + File.separator + "target" + File.separator + "parsefiles" + File.separator + "ast_json" + File.separator + className + ".json";
+//                JsonObject jsonObject = new JsonObject();
+//                int lineNumber = mutantLineNumberFinder(mutantDetailsPath);
+//                System.out.println("mutant_linenumber: " + lineNumber) ;
+//                jsonObject.addProperty("mutant_lineNumber: ", lineNumber);
+//                String methodName = mutantMethodNameFinder(astPath, lineNumber);
+//                System.out.println("mutant_method_name: " + methodName);
+//                jsonObject.addProperty("mutant_method_name: ", methodName);
+//
+//                if (methodName != null) {
+//                    String originCodeFilePath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + className + ".java";
+//                    String mutationCodeFilePath = projectPath + File.separator + "target" + File.separator + "mutants"
+//                            + File.separator + i + File.separator + "net" + File.separator + "mooctest" + File.separator + className + ".java";
+//                    String methodSourceCode = originCodeFinderWithMethodName(originCodeFilePath, methodName);
+//                    String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
+//                    System.out.println("method_original_code:\n" + methodSourceCode);
+//                    jsonObject.addProperty("method_original_code:", methodSourceCode);
+//                    System.out.println("method_mutated_code:\n" + methodMutationCode);
+//                    jsonObject.addProperty("method_mutated_code:", methodMutationCode);
+//                    findDetailedCodeDifferences(methodSourceCode, methodMutationCode);
+//                    String jsonPath = mutantsDir + File.separator + i + File.separator + "mutantDetails.json";
+//                    Utils.saveJsonToFile(jsonPath, jsonObject.getAsString());
+//                }
+//                else continue;
+//            }
+//            else continue;
+
+
 //        String mutantDetailsPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\details.json";
 //        String astPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\parsefiles\\ast_json\\Day.json";
-
-
 
 //        String originCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Day.java";
 //        String mutationCodeFilePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\net\\mooctest\\Day.java";
 //        String methodName = "diffOfBorders";
-
-
         }
     }
 
@@ -287,12 +298,14 @@ public class MutantFinder {
      */
     public static @Nullable String getClassName(String dir){
         File directory = new File(dir);
-
-        File[] files = directory.listFiles(file -> file.isFile() && file.getName().toLowerCase().endsWith(".java"));
-        String className = files[0].getName();
+        List<String> javaFilesPath = new ArrayList<>();
+        Utils.searchJavaFiles(new File(dir), javaFilesPath);
+//        System.out.println("javaFilesPath: " + javaFilesPath);
+        File file = new File(javaFilesPath.get(0).toString());
+//        File[] files = directory.listFiles(file -> file.isFile() && file.getName().toLowerCase().endsWith(".java"));
+        String className = file.getName();
         // 获取最后一个点号的位置，它是文件名和扩展名的分隔符
         int dotIndex = className.lastIndexOf('.');
-
         // 检查点号是否存在且不是文件名的第一个字符
         if (dotIndex > 0) {
             // 使用 substring() 方法截取文件名
@@ -305,7 +318,9 @@ public class MutantFinder {
 //            System.out.println("文件名（无扩展名）: " + className);
             className = null;
         }
+//        System.out.println("className: " + className);
         return className;
+
     }
 
 }

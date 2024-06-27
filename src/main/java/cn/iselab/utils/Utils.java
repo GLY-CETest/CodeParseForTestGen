@@ -60,11 +60,11 @@ public class Utils {
 
 
     /**
-     * 递归查找目录中的所有源代码
+     * 递归查找目录中的所有java文件
      * @param directory
-     * @return
+     * @param javaFilesPath 用于报错javafiles路径的列表，调用该方法前需要先定义一个List<String> sourceFilesPath变量
      */
-    public static void searchJavaFiles(File directory, List<String> sourceFilesPath) {
+    public static void searchJavaFiles(File directory, List<String> javaFilesPath) {
         // 获取目录下的所有文件和子目录
         File[] files = directory.listFiles();
 //        List<String> sourceFilesPath = new ArrayList<>();
@@ -73,15 +73,43 @@ public class Utils {
             for (File file : files) {
                 if (file.isFile() && file.getName().endsWith(".java")) {
                     // 打印文件路径
-                    System.out.println("File: " + file.getAbsolutePath());
-                    sourceFilesPath.add(file.getAbsolutePath());
+//                    System.out.println("File: " + file.getAbsolutePath());
+                    javaFilesPath.add(file.getAbsolutePath());
                 } else if (file.isDirectory()) {
                     // 递归查找子目录
-                    searchJavaFiles(file, sourceFilesPath);
+                    searchJavaFiles(file, javaFilesPath);
                 }
             }
         }
-        System.out.println(sourceFilesPath);
+//        System.out.println(javaFilesPath);
+//        return sourceFilesPath;
+    }
+
+
+    /**
+     * 递归查找目录中的所有java文件
+     * @param directory
+     * @param jsonFilesPath 用于报错javafiles路径的列表，调用该方法前需要先定义一个List<String> sourceFilesPath变量
+     */
+    public static String searchJsonFiles(File directory, List<String> jsonFilesPath) {
+        // 获取目录下的所有文件和子目录
+        File[] files = directory.listFiles();
+//        List<String> sourceFilesPath = new ArrayList<>();
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile() && file.getName().endsWith(".json")) {
+                    // 打印文件路径
+//                    System.out.println("File: " + file.getAbsolutePath());
+                    jsonFilesPath.add(file.getAbsolutePath());
+                } else if (file.isDirectory()) {
+                    // 递归查找子目录
+                    searchJavaFiles(file, jsonFilesPath);
+                }
+            }
+        }
+        return jsonFilesPath.get(0).toString();
+//        System.out.println(javaFilesPath);
 //        return sourceFilesPath;
     }
 

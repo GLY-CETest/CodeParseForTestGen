@@ -10,6 +10,9 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -28,9 +31,18 @@ public class MutantFinder {
 //        System.out.println(className);
         String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday";
         saveDetailsOfMuAndOriToJson(projectPath);
+
+        String oriPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Month.java";
+        String mutPatn = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\122\\net\\mooctest\\Month.java";
+//        findWholeCodeDifferences(oriPath, mutPatn);
     }
 
 
+    /**
+     * save all details of difference between mutants and originals of a project to json files
+     * @param projectPath
+     * @throws Exception
+     */
     public static void saveDetailsOfMuAndOriToJson(String projectPath) throws Exception {
         String mutantsDir = projectPath + File.separator + "target" + File.separator + "mutants";
         long mutantnumber = Utils.folderCounter(mutantsDir);
@@ -38,49 +50,46 @@ public class MutantFinder {
         for (int i = 1; i <= mutantnumber; i++) {
             String mutantDetailsPath = mutantsDir + File.separator + i + File.separator + "details.json";
             String className = getClassName(mutantsDir + File.separator + i);
-            System.out.println("className: " + className);
+//            System.out.println("className: " + className);
             if (className != null) {
                 String astPath = projectPath + File.separator + "target" + File.separator + "parsefiles" + File.separator + "ast_json" + File.separator + className + ".json";
-                System.out.println("astPath: " + astPath);
+//                System.out.println("astPath: " + astPath);
                 JsonObject jsonObject = new JsonObject();
                 int lineNumber = mutantLineNumberFinder(mutantDetailsPath);
-                System.out.println("mutant_linenumber: " + lineNumber) ;
-                jsonObject.addProperty("mutant_lineNumber: ", lineNumber);
+//                System.out.println("mutant_linenumber: " + lineNumber) ;
                 String methodName = mutantMethodNameFinder(astPath, lineNumber);
-                System.out.println("mutant_method_name: " + methodName);
+//                System.out.println("mutant_method_name: " + methodName);
+                // 将变异体的类名、变异体所在行号、变异体所在方法名保存到jsonObject中
+                jsonObject.addProperty("mutant_className: ", className);
+                jsonObject.addProperty("mutant_lineNumber: ", lineNumber);
                 jsonObject.addProperty("mutant_method_name: ", methodName);
                 if (methodName != null) {
+                    String oriCodeFilePath = Utils.searchOriJavaFile(className,
+                            projectPath + File.separator + "target" + File.separator + "classes");
+//                    System.out.println("originCodeFilePath: " + oriCodeFilePath);
+                    String mutationCodeFilePath = Utils.searchMutantJavaFile(className,
+                            mutantsDir + File.separator + i);
+//                    System.out.println("mutationCodeFilePath: " + mutationCodeFilePath);
 
+                    String oriMethodCodePath = oriCodeFinderWithMethodName(oriCodeFilePath, methodName);
+                    String methodMutationCodePath = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
+//                    System.out.println("method_original_code:\n" + oriMethodCode);
+                    jsonObject.addProperty("method_original_code:", oriMethodCodePath);
+//                    System.out.println("method_mutated_code:\n" + methodMutationCode);
+                    jsonObject.addProperty("method_mutated_code:", methodMutationCodePath);
+                    System.out.printf("----- Mutant Number %d -----%n", i);
+
+                    JsonObject difference = findWholeCodeDifferences(oriCodeFilePath, mutationCodeFilePath);
+                    jsonObject.add("difference_body", difference);
+//
+                    System.out.printf("difference: %s %n", difference);
+                    System.out.println("jsonObject: " + jsonObject.toString());
+                    String jsonPath = mutantsDir + File.separator + i + File.separator + "diff_details.json";
+                    Utils.saveJsonToFile(jsonPath, jsonObject.toString());
                 }
+                else continue;
             }
             else continue;
-//            if (className != null) {
-//                String astPath = projectPath + File.separator + "target" + File.separator + "parsefiles" + File.separator + "ast_json" + File.separator + className + ".json";
-//                JsonObject jsonObject = new JsonObject();
-//                int lineNumber = mutantLineNumberFinder(mutantDetailsPath);
-//                System.out.println("mutant_linenumber: " + lineNumber) ;
-//                jsonObject.addProperty("mutant_lineNumber: ", lineNumber);
-//                String methodName = mutantMethodNameFinder(astPath, lineNumber);
-//                System.out.println("mutant_method_name: " + methodName);
-//                jsonObject.addProperty("mutant_method_name: ", methodName);
-//
-//                if (methodName != null) {
-//                    String originCodeFilePath = projectPath + File.separator + "src" + File.separator + "main" + File.separator + className + ".java";
-//                    String mutationCodeFilePath = projectPath + File.separator + "target" + File.separator + "mutants"
-//                            + File.separator + i + File.separator + "net" + File.separator + "mooctest" + File.separator + className + ".java";
-//                    String methodSourceCode = originCodeFinderWithMethodName(originCodeFilePath, methodName);
-//                    String methodMutationCode = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
-//                    System.out.println("method_original_code:\n" + methodSourceCode);
-//                    jsonObject.addProperty("method_original_code:", methodSourceCode);
-//                    System.out.println("method_mutated_code:\n" + methodMutationCode);
-//                    jsonObject.addProperty("method_mutated_code:", methodMutationCode);
-//                    findDetailedCodeDifferences(methodSourceCode, methodMutationCode);
-//                    String jsonPath = mutantsDir + File.separator + i + File.separator + "mutantDetails.json";
-//                    Utils.saveJsonToFile(jsonPath, jsonObject.getAsString());
-//                }
-//                else continue;
-//            }
-//            else continue;
 
 
 //        String mutantDetailsPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\1\\details.json";
@@ -166,13 +175,13 @@ public class MutantFinder {
 
 
     /**
-     * get the sourceCode of a method
+     * get the origin code body of a method
      * @param sourcefilePath
      * @param methodName
      * @return
      * @throws Exception
      */
-    public static @Nullable String originCodeFinderWithMethodName(String sourcefilePath, String methodName) throws Exception {
+    public static @Nullable String oriCodeFinderWithMethodName(String sourcefilePath, String methodName) throws Exception {
 //        String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\target\\classes\\net\\mooctest\\Triangle.java"; // 替换为你的.java文件路径
 //        String methodName = "diffOfBorders";
 
@@ -200,31 +209,84 @@ public class MutantFinder {
     }
 
 
+//    /**
+//     * find the detailed code differences between two methods, return the differences and line numbers
+//     * @param original
+//     * @param mutated
+//     */
+//    public static JsonObject findDetailedCodeDifferences(String original, String mutated) {
+//        JsonObject jsonObject = new JsonObject();
+//        String[] originalLines = original.split("\n");
+//        String[] mutatedLines = mutated.split("\n");
+//
+//        int maxLines = Math.max(originalLines.length, mutatedLines.length);
+//
+////        System.out.println("Differences found:");
+//
+//        for (int i = 0; i < maxLines; i++) {
+//            String originalLine = i < originalLines.length ? originalLines[i] : "";
+//            String mutatedLine = i < mutatedLines.length ? mutatedLines[i] : "";
+//
+//            if (!originalLine.equals(mutatedLine)) {
+//                System.out.println("mutated_line_number_in_method: " + i);
+//                System.out.println("original_line_code: " + originalLine);
+//                System.out.println("mutated_line_code: " + mutatedLine);
+//                jsonObject.addProperty("mutated_line_number_in_method", i);
+//                jsonObject.addProperty("original_line_code", originalLine);
+//                jsonObject.addProperty("mutated_line_code", mutatedLine);
+//            }
+//        }
+//        return jsonObject;
+//    }
+
+
     /**
-     * find the detailed code differences between two methods, return the differences and line numbers
+     * 找到两个类之间不同的方法并通过javaparse返回方法的完整代码体（不包括static声明）
      * @param original
      * @param mutated
+     * @throws IOException
      */
-    public static JsonObject findDetailedCodeDifferences(String original, String mutated) {
+    public static JsonObject findWholeCodeDifferences(String originalPath, String mutantPath) throws IOException {
+        String content1 = new String(Files.readAllBytes(Paths.get(originalPath)));
+        String content2 = new String(Files.readAllBytes(Paths.get(mutantPath)));
         JsonObject jsonObject = new JsonObject();
-        String[] originalLines = original.split("\n");
-        String[] mutatedLines = mutated.split("\n");
 
-        int maxLines = Math.max(originalLines.length, mutatedLines.length);
+        // 使用JavaParser解析代码
+        CompilationUnit cu1 = StaticJavaParser.parse(content1);
+        CompilationUnit cu2 = StaticJavaParser.parse(content2);
 
-        System.out.println("Differences found:");
+        // 比较两个文件中的方法
+        jsonObject = compareMethods(cu1, cu2);
+        return jsonObject;
+    }
 
-        for (int i = 0; i < maxLines; i++) {
-            String originalLine = i < originalLines.length ? originalLines[i] : "";
-            String mutatedLine = i < mutatedLines.length ? mutatedLines[i] : "";
 
-            if (!originalLine.equals(mutatedLine)) {
-                System.out.println("linenum_in_method: " + i);
-                System.out.println("line_original: " + originalLine);
-                System.out.println("line_mutated : " + mutatedLine);
-                jsonObject.addProperty("linenum_in_method", i);
-                jsonObject.addProperty("line_original", originalLine);
-                jsonObject.addProperty("mutated", mutatedLine);
+    private static JsonObject compareMethods(CompilationUnit cu1, CompilationUnit cu2) {
+        // 获取两个文件中的方法列表
+        List<MethodDeclaration> methods1 = cu1.findAll(MethodDeclaration.class);
+        List<MethodDeclaration> methods2 = cu2.findAll(MethodDeclaration.class);
+        JsonObject jsonObject = new JsonObject();
+
+        // 比较方法
+        for (int i = 0; i < Math.min(methods1.size(), methods2.size()); i++) {
+            MethodDeclaration method1 = methods1.get(i);
+            MethodDeclaration method2 = methods2.get(i);
+
+            // 比较方法名和签名
+            if (method1.getNameAsString().equals(method2.getNameAsString())) {
+                // 比较方法体
+                String body1 = method1.getBody().map(b -> b.toString()).orElse("");
+                String body2 = method2.getBody().map(b -> b.toString()).orElse("");
+
+                if (!body1.equals(body2)) {
+//                    System.out.println("Difference in method: " + method1.getName());
+                    System.out.println("Method 1 body:");
+                    System.out.println(body1);
+                    jsonObject.addProperty("origin_method_body", body1);
+                    System.out.println("Method 2 body:");
+                    System.out.println(body2);
+                    jsonObject.addProperty("mutated_method_body", body2);
+                }
             }
         }
         return jsonObject;
@@ -232,7 +294,7 @@ public class MutantFinder {
 
 
     /**
-     * get the code of a mutant
+     * get the code body of a mutant
      * @param mutantFilePath
      * @param methodName
      * @return
@@ -292,7 +354,7 @@ public class MutantFinder {
 
 
     /**
-     * get the class name of a mutant
+     * get the class name from a mutant file
      * @param dir the dir of the mutant file
      * @return the class name without the .java extension
      */

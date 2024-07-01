@@ -34,11 +34,11 @@ public class FernflowerDecompiler {
         List<String> sourceClassesFiles = findClassFiles(sourceClassesPath.toString());
         List<String> mutantsClassesFiles = findClassFiles(mutantsClassPath.toString());
 //        System.out.println("Found .class files:");
-        System.out.println("-----Decompiling source classes-----");
+        System.out.println("----------Decompiling source classes----------");
         for (String filePath : sourceClassesFiles) {
             decompileWithFernflower(filePath, new File(filePath).getParent().toString());
         }
-        System.out.println("-----Decompiling mutant classes-----");
+        System.out.println("----------Decompiling mutant classes----------");
         for (String filePath : mutantsClassesFiles) {
             decompileWithFernflower(filePath, new File(filePath).getParent().toString());
         }

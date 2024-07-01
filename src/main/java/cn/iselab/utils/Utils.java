@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
@@ -13,6 +14,12 @@ public class Utils {
     public static void main(String[] args){
         String folderPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants"; // 替换为你的文件夹路径
         long count = folderCounter(folderPath);
+        File file = new File("C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\parsefiles\\ast_json\\Day.json");
+        System.out.println(file.getName());
+        List<String> fileList = new ArrayList<>();
+        String dir = "C:\\Users\\dell\\Desktop\\100000\\4271";
+        searchJavaFiles(new File(dir), fileList);
+        System.out.printf("Number of java files: %d\n", fileList.size());
     }
 
     public static long folderCounter(String path)
@@ -51,7 +58,7 @@ public class Utils {
             FileWriter fileWriter = new FileWriter(filePath);
             fileWriter.write(string);
             fileWriter.close();
-            System.out.println("Successfully wrote to the file.");
+            System.out.println("Successfully wrote to the file: " + filePath);
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -60,19 +67,17 @@ public class Utils {
 
 
     /**
-     * 递归查找目录中的所有java文件
+     * Search all java files in the directory and its subdirectories
      * @param directory
      * @param javaFilesPath 用于报错javafiles路径的列表，调用该方法前需要先定义一个List<String> sourceFilesPath变量
      */
     public static void searchJavaFiles(File directory, List<String> javaFilesPath) {
-        // 获取目录下的所有文件和子目录
+        // get all files and directories in the directory
         File[] files = directory.listFiles();
 //        List<String> sourceFilesPath = new ArrayList<>();
-
         if (files != null) {
             for (File file : files) {
                 if (file.isFile() && file.getName().endsWith(".java")) {
-                    // 打印文件路径
 //                    System.out.println("File: " + file.getAbsolutePath());
                     javaFilesPath.add(file.getAbsolutePath());
                 } else if (file.isDirectory()) {
@@ -87,9 +92,9 @@ public class Utils {
 
 
     /**
-     * 递归查找目录中的所有java文件
+     * 递归查找目录中的所有json文件
      * @param directory
-     * @param jsonFilesPath 用于报错javafiles路径的列表，调用该方法前需要先定义一个List<String> sourceFilesPath变量
+     * @param jsonFilesPath 用于保存所有json文件路径的列表，调用该方法前需要先定义一个List<String> jsonFilesPath变量
      */
     public static String searchJsonFiles(File directory, List<String> jsonFilesPath) {
         // 获取目录下的所有文件和子目录
@@ -115,10 +120,47 @@ public class Utils {
 
 
     /**
+     * given a class name and source file directory, find the corresponding java file
+     * @param className
+     * @param sourceFileDir
+     * @return
+     */
+    public static String searchOriJavaFile(String className, String sourceFileDir) {
+        List<String> javaFilesPath = new ArrayList<>();
+        searchJavaFiles(new File(sourceFileDir), javaFilesPath);
+        for (String path : javaFilesPath){
+            File file = new File(path);
+            String fileName = file.getName();
+            if (file.getName().endsWith(".java") && fileName.equals(className + ".java")) return file.getPath();
+        }
+        return null;
+    }
+
+
+    /**
+     *
+     * @param className
+     * @param mutantFileDir
+     * @return
+     */
+    public static String searchMutantJavaFile(String className, String mutantFileDir) {
+        List<String> javaFilesPath = new ArrayList<>();
+        searchJavaFiles(new File(mutantFileDir), javaFilesPath);
+        for (String path : javaFilesPath) {
+            File file = new File(path);
+            String fileName = file.getName();
+            if (file.getName().endsWith(".java") && fileName.equals(className + ".java")) return file.getPath();
+        }
+        return null;
+    }
+
+
+    /**
      * replace java files with decompiled java files
      * @param projectPath
      */
     public static void javaFileReplace(String projectPath){
 
     }
+
 }

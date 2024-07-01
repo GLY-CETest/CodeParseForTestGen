@@ -268,7 +268,7 @@ public class GenMutantsNoCommandArgs {
         }
 
         // Log separator.
-        System.out.println("==========================================================");
+        System.out.println("----------------------------------------");
     }
 
     /**

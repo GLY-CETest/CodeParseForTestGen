@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 
+import cn.iselab.mutant.process.MutantFinder;
 import cn.iselab.mutant.process.ProjectPackaging;
 import cn.iselab.mutant.generating.GenMutantsNoCommandArgs;
 import cn.iselab.mutant.process.FernflowerDecompiler;
@@ -17,27 +18,29 @@ public class Main {
         List<String> projectDirs = getProjectDirs(path);
 
         for (String projectDir : projectDirs) {
-            System.out.printf("----------Packaging project %s----------%n", projectDir);
+            System.out.printf("==========Packaging project %s==========%n", projectDir);
             ProjectPackaging.packageProjectToJar(projectDir);
             List<String> jarFiles = ProjectPackaging.findJarFiles(projectDir);
             String jarFilePath = jarFiles.get(0);
             System.out.printf("Jar file path is: %s%n", jarFilePath);
 
-            System.out.printf("----------Parsing java files in project %s----------%n", projectDir);
+            System.out.printf("==========Parsing java files in project %s==========%n", projectDir);
             JavaFileParser.parseJavaFiles(projectDir);
 
-            System.out.printf("----------Analyzing method calls in project %s----------%n", projectDir);
+            System.out.printf("==========Analyzing method calls in project %s==========%n", projectDir);
             MethodCallAnalysis.analyzeAllMethodCallsAndSaveToJson(projectDir);
 
-            System.out.printf("----------Generating mutants for project %s----------%n", projectDir);
+            System.out.printf("==========Generating mutants for project %s==========%n", projectDir);
             List<String> sourceJarPaths = new ArrayList<>();
             sourceJarPaths.add(jarFilePath);
             GenMutantsNoCommandArgs.generateMutantsAndOutput(sourceJarPaths,
                     projectDir + File.separator + "target" + File.separator + "mutants");
 
-            System.out.printf("----------Decompiling class files in %s----------%n", projectDir);
+            System.out.printf("==========Decompiling class files in %s==========%n", projectDir);
             FernflowerDecompiler.deCompileAllClassesWithFF(projectDir);
 
+            System.out.printf("==========Analyzing mutants in project %s==========%n", projectDir);
+            MutantFinder.saveDetailsOfMuAndOriToJson(projectDir);
         }
     }
 

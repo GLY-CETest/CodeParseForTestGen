@@ -22,9 +22,9 @@ public class Main {
             ProjectPackaging.packageProjectToJar(projectDir);
             List<String> jarFiles = ProjectPackaging.findJarFiles(projectDir);
             String jarFilePath = jarFiles.get(0);
-            System.out.printf("Jar file path is: %s%n", jarFilePath);
+            System.out.printf("jar file path is: %s%n", jarFilePath);
 
-            System.out.printf("==========Parsing java files in project %s==========%n", projectDir);
+            System.out.printf("==========Parsing ast from java files in project %s==========%n", projectDir);
             JavaFileParser.parseJavaFiles(projectDir);
 
             System.out.printf("==========Analyzing method calls in project %s==========%n", projectDir);
@@ -61,7 +61,6 @@ public class Main {
                 }
             }
         }
-
         return subDirs;
     }
 }

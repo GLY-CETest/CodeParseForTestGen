@@ -84,7 +84,7 @@ public class MutantFinder {
 //
                     System.out.printf("difference: %s %n", difference);
                     System.out.println("jsonObject: " + jsonObject.toString());
-                    String jsonPath = mutantsDir + File.separator + i + File.separator + "diff_details.json";
+                    String jsonPath = mutantsDir + File.separator + i + File.separator + className + ".json";
                     Utils.saveJsonToFile(jsonPath, jsonObject.toString());
                 }
                 else continue;
@@ -146,7 +146,7 @@ public class MutantFinder {
             if (jsonNode.isArray()) {
                 // 遍历数组中的每个元素
                 for (JsonNode elementNode : jsonNode) {
-                    // 处理每个 JSON 对象
+                    // 处理每个JSON 对象
                     String name = elementNode.get("name").asText();
                     String type = elementNode.get("type").asText();
                     if (type.equals("method")) {

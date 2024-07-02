@@ -110,18 +110,21 @@ public class MethodCallAnalysis {
 
             // 创建一个 Map 来存储方法信息
             Map<String, Object> methodInfo = new HashMap<>();
-            methodInfo.put("methodName", md.getNameAsString());
+            methodInfo.put("callerName", md.getNameAsString());
             List<String> parameterTypes = md.getParameters().stream()
                     .map(p -> p.getType().asString())
                     .collect(Collectors.toList());
-            methodInfo.put("signature", md.getName().toString() + "(" + String.join(", ", parameterTypes) + ")");
+//            methodInfo.put("signature", md.getName().toString() + "(" + String.join(", ", parameterTypes) + ")");
+            //为了与ast匹配，使用getDeclarationAsString()
+            methodInfo.put("signature", md.getDeclarationAsString());
             methodInfo.put("methodCalls", new ArrayList<Map<String, Object>>());
 
             // 查找方法调用
             List<MethodCallExpr> methodCalls = md.findAll(MethodCallExpr.class);
             for (MethodCallExpr mce : methodCalls) {
                 Map<String, Object> callInfo = new HashMap<>();
-                callInfo.put("calledMethodName", mce.getNameAsString());
+                callInfo.put("callee", mce.getNameAsString());
+//                callInfo.put("calleeSig", mce.get)
                 callInfo.put("line", mce.getBegin().get().line);
 
                 ((List<Map<String, Object>>) methodInfo.get("methodCalls")).add(callInfo);

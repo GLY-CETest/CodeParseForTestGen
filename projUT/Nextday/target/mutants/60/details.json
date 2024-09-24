@@ -1,8 +1,0 @@
-{
-	"className":"net.mooctest.Date",
-	"id":60,
-	"lineNumber":17,
-	"methodSignature":"increment()V",
-	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.VoidMethodCallMutator",
-	"sourceFile":"Date.java"
-}

@@ -3,9 +3,11 @@ package cn.iselab.codeparse;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.comments.CommentsCollection;
+import com.github.javaparser.printer.PrettyPrinter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -186,18 +188,25 @@ public class JavaFileParser {
                 for (ClassOrInterfaceDeclaration c : compilationUnit.findAll(ClassOrInterfaceDeclaration.class)) {
                     JSONArray jsonArray = new JSONArray();
                     JSONObject classJson = new JSONObject();
-
                     try {
                         classJson.put("name", c.getName().asString());
                         classJson.put("code", c.toString());
-                    } catch (JSONException e) {
+                        CompilationUnit cu = c.findCompilationUnit().orElse(null);
+                        if (cu != null) {
+                            // 从 CompilationUnit 中获取包声明
+                            Optional<PackageDeclaration> packageDeclaration = cu.getPackageDeclaration();
+                            if (packageDeclaration.isPresent()) {
+                                // 打印包名称
+                                System.out.println("Class " + c.getName() + " is in package: " + packageDeclaration.get().getNameAsString());
+                                classJson.put("packageName", packageDeclaration.get().getNameAsString());
+                            }
+                        }
+
+                    }
+                    catch (JSONException e) {
                         e.printStackTrace();
                     }
-//                    try {
-//                        classJson.put("code", c.toString());
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
+
                     if (c instanceof ClassOrInterfaceDeclaration) {
                         classJson.put("type", "class");
                     }
@@ -207,6 +216,16 @@ public class JavaFileParser {
                         JSONObject methodJson = new JSONObject();
                         try {
                             methodJson.put("name", m.getNameAsString());
+                            CompilationUnit cu = c.findCompilationUnit().orElse(null);
+                            if (cu != null) {
+                                // 从 CompilationUnit 中获取包声明
+                                Optional<PackageDeclaration> packageDeclaration = cu.getPackageDeclaration();
+                                if (packageDeclaration.isPresent()) {
+                                    // 打印包名称
+                                    System.out.println("Class " + c.getName() + " is in package: " + packageDeclaration.get().getNameAsString());
+                                    methodJson.put("packageName", packageDeclaration.get().getNameAsString());
+                                }
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -274,6 +293,11 @@ public class JavaFileParser {
                                 .collect(Collectors.toList());
 //                        methodJson.put("signature", m.getName().toString() + "(" + String.join(", ", parameterTypes) + ")");
                         methodJson.put("signature", m.getDeclarationAsString());
+
+                        PrettyPrinter prettyPrinter = new PrettyPrinter();
+                        methodJson.put("short_sig", m.getNameAsString() + m.getParameters().stream()
+                                .map(expression -> prettyPrinter.print(expression))
+                                .collect(Collectors.joining(", ", "(", ")")));
 
 
                         jsonArray.put(methodJson);

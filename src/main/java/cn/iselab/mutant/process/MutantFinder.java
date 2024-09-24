@@ -29,11 +29,11 @@ public class MutantFinder {
     public static void main(String[] args) throws Exception {
 //        String className = getClassName("C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\2\\net\\mooctest");
 //        System.out.println(className);
-        String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday";
+        String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday_1523352132921";
         saveDetailsOfMuAndOriToJson(projectPath);
 
-        String oriPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Month.java";
-        String mutPatn = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\122\\net\\mooctest\\Month.java";
+//        String oriPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Month.java";
+//        String mutPatn = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\122\\net\\mooctest\\Month.java";
 //        findWholeCodeDifferences(oriPath, mutPatn);
     }
 
@@ -60,9 +60,9 @@ public class MutantFinder {
                 String methodName = mutantMethodNameFinder(astPath, lineNumber);
 //                System.out.println("mutant_method_name: " + methodName);
                 // 将变异体的类名、变异体所在行号、变异体所在方法名保存到jsonObject中
-                jsonObject.addProperty("mutant_className: ", className);
-                jsonObject.addProperty("mutant_lineNumber: ", lineNumber);
-                jsonObject.addProperty("mutant_method_name: ", methodName);
+                jsonObject.addProperty("mutant_className", className);
+                jsonObject.addProperty("mutant_lineNumber", lineNumber);
+                jsonObject.addProperty("mutant_method_name", methodName);
                 if (methodName != null) {
                     String oriCodeFilePath = Utils.searchOriJavaFile(className,
                             projectPath + File.separator + "target" + File.separator + "classes");
@@ -74,9 +74,9 @@ public class MutantFinder {
                     String oriMethodCodePath = oriCodeFinderWithMethodName(oriCodeFilePath, methodName);
                     String methodMutationCodePath = mutationCodeFinderWithMethodName(mutationCodeFilePath, methodName);
 //                    System.out.println("method_original_code:\n" + oriMethodCode);
-                    jsonObject.addProperty("method_original_code:", oriMethodCodePath);
+                    jsonObject.addProperty("method_original_code", oriMethodCodePath);
 //                    System.out.println("method_mutated_code:\n" + methodMutationCode);
-                    jsonObject.addProperty("method_mutated_code:", methodMutationCodePath);
+                    jsonObject.addProperty("method_mutated_code", methodMutationCodePath);
                     System.out.printf("----- Mutant Number %d -----%n", i);
 
                     JsonObject difference = findWholeCodeDifferences(oriCodeFilePath, mutationCodeFilePath);

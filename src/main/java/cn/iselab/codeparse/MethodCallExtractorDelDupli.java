@@ -1,5 +1,6 @@
 package cn.iselab.codeparse;
 
+import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
@@ -65,8 +66,8 @@ public class MethodCallExtractorDelDupli {
 
     public static void main(String[] args) throws IOException {
         // 解析源代码文件路径
-        SourceRoot sourceRoot = new SourceRoot(Paths.get("C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\projUT\\Triangle\\src\\main\\java"));
-        CompilationUnit cu = sourceRoot.parse("net\\mooctest", "");
+        SourceRoot sourceRoot = new SourceRoot(Paths.get("C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday"));
+        CompilationUnit cu = StaticJavaParser.parse(Paths.get("C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\src\\main\\java\\net\\mooctest\\Year.java"));
 
         MethodCallVisitor methodCallVisitor = new MethodCallVisitor();
         methodCallVisitor.visit(cu, null);
@@ -79,7 +80,7 @@ public class MethodCallExtractorDelDupli {
         }
 
         // 将去重后的调用关系保存为JSON文件
-        try (FileWriter writer = new FileWriter("C:/YGL/Projects/pythonProject/MutationGPTTestGeneration/javaparserfile/Triangle/method_call_json/method_calls.json")) {
+        try (FileWriter writer = new FileWriter("C:\\YGL\\Projects\\pythonProject\\MutationTestGEN-LLM\\javaparserfile\\method_calls.json")) {
             new Gson().toJson(jsonArray, writer);
         }
     }

@@ -1,8 +1,0 @@
-{
-	"className":"net.mooctest.Triangle",
-	"id":11,
-	"lineNumber":83,
-	"methodSignature":"diffOfBorders(JJ)J",
-	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.MathMutator",
-	"sourceFile":"Triangle.java"
-}

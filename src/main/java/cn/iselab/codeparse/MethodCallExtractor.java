@@ -49,7 +49,7 @@ public class MethodCallExtractor {
     }
 
     public static void main(String[] args) throws IOException {
-        SourceRoot sourceRoot = new SourceRoot(Paths.get("C:\\YGL\\Projects\\pythonProject\\MutationGPTTestGeneration\\projUT\\Triangle\\src\\main\\java\\net\\mooctest"));
+        SourceRoot sourceRoot = new SourceRoot(Paths.get("C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday"));
         CompilationUnit cu = sourceRoot.parse("", "Triangle.java");
 
         MethodCallVisitor methodCallVisitor = new MethodCallVisitor();

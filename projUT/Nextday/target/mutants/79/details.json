@@ -1,8 +1,0 @@
-{
-	"className":"net.mooctest.Month",
-	"id":79,
-	"lineNumber":52,
-	"methodSignature":"equals(Ljava/lang/Object;)Z",
-	"mutator":"org.pitest.mutationtest.engine.gregor.mutators.returns.BooleanFalseReturnValsMutator",
-	"sourceFile":"Month.java"
-}

@@ -17,6 +17,7 @@ public class Main {
         String path = System.getProperty("user.dir") + File.separator + "projUT";
         List<String> projectDirs = getProjectDirs(path);
 
+
         for (String projectDir : projectDirs) {
             System.out.printf("==========Packaging project %s==========%n", projectDir);
             ProjectPackaging.packageProjectToJar(projectDir);
@@ -61,6 +62,7 @@ public class Main {
                 }
             }
         }
+
         return subDirs;
     }
 }

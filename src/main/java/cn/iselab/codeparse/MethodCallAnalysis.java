@@ -6,6 +6,8 @@ import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.resolution.types.ResolvedType;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.printer.PrettyPrinter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,7 +34,7 @@ public class MethodCallAnalysis {
 
     public static void main(String[] args) {
         // 指定源码根目录
-        String sourceRootPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday";
+        String sourceRootPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday_1523352132921";
         analyzeAllMethodCallsAndSaveToJson(sourceRootPath);
     }
 
@@ -123,8 +125,13 @@ public class MethodCallAnalysis {
             List<MethodCallExpr> methodCalls = md.findAll(MethodCallExpr.class);
             for (MethodCallExpr mce : methodCalls) {
                 Map<String, Object> callInfo = new HashMap<>();
-                callInfo.put("callee", mce.getNameAsString());
-//                callInfo.put("calleeSig", mce.get)
+                callInfo.put("name", mce.getNameAsString());
+                PrettyPrinter prettyPrinter = new PrettyPrinter();
+                callInfo.put("signature", mce.getNameAsString() + mce.getArguments().stream()
+                        .map(expression -> prettyPrinter.print(expression))
+                        .collect(Collectors.joining(", ", "(", ")")));
+//                mce.get
+                callInfo.put("methodName", mce.findAncestor(ClassOrInterfaceDeclaration.class).orElse(null).getName().toString());
                 callInfo.put("line", mce.getBegin().get().line);
 
                 ((List<Map<String, Object>>) methodInfo.get("methodCalls")).add(callInfo);

@@ -14,7 +14,7 @@ public class MethodCallExtractorSimple {
 
     public static void main(String[] args) {
         // 指定要解析的Java文件路径
-        String filePath = "C:\\YGL\\Projects\\pythonProject\\MutationGPTTestGeneration\\source_proj\\Triangle\\Triangle.java";
+        String filePath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\src\\main\\java\\net\\mooctest\\Year.java";
 
         // 解析Java文件
         try (FileInputStream in = new FileInputStream(filePath)) {

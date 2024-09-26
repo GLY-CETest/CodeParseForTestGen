@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.mooctest</groupId>
-    <artifactId>CodeParse</artifactId>
+    <artifactId>CodeParseForTestGen</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -84,18 +84,26 @@
             <scope>compile</scope>
         </dependency>
         <!--        <dependency>-->
-<!--            <groupId>org.benf</groupId>-->
-<!--            <artifactId>cfr</artifactId>-->
-<!--            <version>0.152</version>-->
-<!--            <scope>system</scope>-->
-<!--            <systemPath>C:\YGL\Projects\CodeParse\libs\cfr-0.152.jar</systemPath>-->
-<!--        </dependency>-->
+        <!--            <groupId>org.benf</groupId>-->
+        <!--            <artifactId>cfr</artifactId>-->
+        <!--            <version>0.152</version>-->
+        <!--            <scope>system</scope>-->
+        <!--            <systemPath>C:\YGL\Projects\CodeParse\libs\cfr-0.152.jar</systemPath>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.jd.core</groupId>
             <artifactId>jd-core-java</artifactId>
             <version>1.1.3</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/jd-core-1.1.3.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>Fernflower</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/fernflower.jar</systemPath>
         </dependency>
 
     </dependencies>
@@ -116,9 +124,23 @@
                 <artifactId>pitest-maven</artifactId>
                 <version>1.7.0</version>
             </plugin>
-
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 版本可根据实际情况调整 -->
+                <version>2.1.4.RELEASE</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                    <mainClass>cn.iselab.Main</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
-
 </project>

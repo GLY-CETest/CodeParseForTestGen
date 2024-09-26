@@ -14,7 +14,18 @@ import cn.iselab.codeparse.MethodCallAnalysis;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        String path = System.getProperty("user.dir") + File.separator + "projUT";
+        String path = "";
+        if(args.length == 1){
+            path = args[0];
+        } else if (args.length > 1) {
+            System.out.println("Too many arguments");
+            return;
+        } else {
+            path = System.getProperty("user.dir") + File.separator + "projUT";
+//            System.out.println("Please input the project path as the first argument");
+
+        }
+
         List<String> projectDirs = getProjectDirs(path);
 
 

@@ -127,7 +127,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <!-- 版本可根据实际情况调整 -->
                 <version>2.1.4.RELEASE</version>
                 <executions>
                     <execution>

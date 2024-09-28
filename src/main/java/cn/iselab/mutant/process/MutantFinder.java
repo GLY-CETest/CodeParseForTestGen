@@ -29,8 +29,12 @@ public class MutantFinder {
     public static void main(String[] args) throws Exception {
 //        String className = getClassName("C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\2\\net\\mooctest");
 //        System.out.println(className);
-        String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday_1523352132921";
-        saveDetailsOfMuAndOriToJson(projectPath);
+//        String projectPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday_1523352132921";
+//        saveDetailsOfMuAndOriToJson(projectPath);
+
+        String mudir = "C:\\Users\\dell\\Desktop\\projects\\Nextday_1523352132921\\target\\mutants\\1";
+        System.out.println(getClassName(mudir));
+
 
 //        String oriPath = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\classes\\net\\mooctest\\Month.java";
 //        String mutPatn = "C:\\YGL\\Projects\\CodeParse\\projUT\\Nextday\\target\\mutants\\122\\net\\mooctest\\Month.java";
@@ -49,6 +53,7 @@ public class MutantFinder {
 
         for (int i = 1; i <= mutantnumber; i++) {
             String mutantDetailsPath = mutantsDir + File.separator + i + File.separator + "details.json";
+            System.out.println("mutantsDir:" + mutantsDir + File.separator + i);
             String className = getClassName(mutantsDir + File.separator + i);
 //            System.out.println("className: " + className);
             if (className != null) {
@@ -355,10 +360,11 @@ public class MutantFinder {
 
     /**
      * get the class name from a mutant file
-     * @param dir the dir of the mutant file
+     * @param the dir of the mutant file
      * @return the class name without the .java extension
      */
     public static @Nullable String getClassName(String dir){
+        System.out.println();
         File directory = new File(dir);
         List<String> javaFilesPath = new ArrayList<>();
         Utils.searchJavaFiles(new File(dir), javaFilesPath);
@@ -386,3 +392,6 @@ public class MutantFinder {
     }
 
 }
+
+
+
